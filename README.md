@@ -1,1809 +1,1271 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>🎭 Actor Simulator</title>
-  <style>
-    body {
-      font-family: 'Segoe UI', sans-serif;
-      background: linear-gradient(to right, #dfe9f3, #ffffff);
-      padding: 20px;
-      color: #333;
-    }
-    h1, h2, h3 {
-      color: #1a1a1a;
-    }
-    #profileForm, #game {
-      background: white;
-      padding: 25px;
-      max-width: 650px;
-      margin: auto;
-      box-shadow: 0 0 15px rgba(0,0,0,0.1);
-      border-radius: 12px;
-    }
-    input, select, button {
-      width: 100%;
-      padding: 12px;
-      margin: 10px 0;
-      border-radius: 8px;
-      border: 1px solid #ccc;
-      font-size: 16px;
-    }
-    button {
-      background: #007bff;
-      color: white;
-      cursor: pointer;
-      border: none;
-    }
-    button:hover {
-      background: #0056b3;
-    }
-    #stats {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 5px; /* Reduced from 10px */
-  margin-top: 8px; /* Slightly reduced from 10px */
-  margin-bottom: 16px; /* Slightly reduced from 20px */
-}
-.stat-card {
-  background: #f0f8ff;
-  padding: 6px; /* Reduced from 10px */
-  border-radius: 6px; /* Reduced from 8px */
-  text-align: center;
-  font-size: 14px; /* Smaller font for labels */
-}
-.stat-card span {
-  font-size: 16px; /* Slightly larger for values to maintain readability */
-  font-weight: bold; /* Emphasize values */
-}
-
-/* Media query for smaller screens */
-@media (max-width: 500px) {
-  #stats {
-    grid-template-columns: repeat(2, 1fr); /* Switch to 2-column layout */
-    gap: 4px; /* Further reduce gap */
-  }
-  .stat-card {
-    padding: 5px; /* Further reduce padding */
-    font-size: 13px; /* Slightly smaller labels */
-  }
-  .stat-card span {
-    font-size: 15px; /* Slightly smaller values */
-  }
-}
-    #weekChoices {
-  display: flex;
-  flex-direction: column;
-  gap: 0; /* Remove any vertical gap between buttons */
-}
-
-#weekChoices {
-  display: flex;
-  flex-direction: column;
-  gap: 0; /* Remove any vertical gap between buttons */
-}
-
-.choice-btn {
-  background: #28a745;
-  color: white;
-  font-weight: bold;
-  padding: 8px;
-  font-size: 14px;
-  margin: 0; /* Remove all margins to eliminate side spacing */
-  border-radius: 6px;
-  width: 100%; /* Ensure buttons take full width of the container */
-  box-sizing: border-box; /* Include padding and border in width calculation */
-}
-.choice-btn:hover {
-  background: #1e7e34;
-}
-.choice-btn:disabled {
-  background: #cccccc;
-  cursor: not-allowed;
-}
-    #log {
-      margin-top: 20px;
-      padding: 15px;
-      background: #fffbea;
-      border: 1px dashed #999;
-      border-radius: 8px;
-    }
-    #topButtons {
-      display: flex;
-      justify-content: space-between;
-      margin-bottom: 10px;
-    }
-    #nextWeekContainer {
-  margin-top: 10px; /* Space below #topButtons */
-}
-#nextWeekBtn {
-  background: #ffc107;
-  color: #333;
-  font-weight: bold;
-  width: 100%; /* Match other buttons */
-  padding: 12px; /* Consistent with global button styles */
-  border-radius: 8px; /* Consistent with global button styles */
-  border: none; /* Consistent with global button styles */
-  font-size: 16px; /* Consistent with global button styles */
-  cursor: pointer; /* Consistent with global button styles */
-}
-#nextWeekBtn:hover {
-  background: #e0a800;
-}
-    #modal {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.5);
-      justify-content: center;
-      align-items: center;
-      z-index: 1000;
-    }
-    .modal-content {
-      background: white;
-      padding: 20px;
-      border-radius: 12px;
-      max-width: 400px;
-      text-align: center;
-      box-shadow: 0 0 15px rgba(0,0,0,0.2);
-    }
-    .modal-buttons {
-      display: flex;
-      justify-content: space-around;
-      margin-top: 20px;
-    }
-    .modal-ok-button {
-      display: none;
-      margin-top: 20px;
-    }
-    .modal-btn {
-      width: 45%;
-      padding: 10px;
-      border-radius: 8px;
-      cursor: pointer;
-    }
-    .modal-btn.yes {
-      background: #28a745;
-      color: white;
-    }
-    .modal-btn.yes:hover {
-      background: #1e7e34;
-    }
-    .modal-btn.no {
-      background: #dc3545;
-      color: white;
-    }
-    .modal-btn.no:hover {
-      background: #c82333;
-    }
-    .modal-btn.ok {
-      background: #007bff;
-      color: white; /* Fixed typo */
-      width: 100%;
-    }
-    .modal-btn.ok:hover {
-      background: #0056b3;
-    }
-    .modal-buttons.info {
-      display: none;
-    }
-    .modal-ok-button.info {
-      display: block;
-    }
-    #lifestyleChoices {
-      margin-top: 20px;
-    }
-    #saveNotification {
-      display: none;
-      position: fixed;
-      top: 20px;
-      right: 20px;
-      background: #28a745;
-      color: white;
-      padding: 10px 20px;
-      border-radius: 8px;
-      z-index: 1001;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Barbing Simulator Game</title>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #1a1a1a, #3a3a3a), url('https://source.unsplash.com/random/1920x1080/?barber') no-repeat center center fixed;
+            background-size: cover;
+            color: #fff;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .page {
+            width: 90%;
+            max-width: 600px;
+            margin: 10px;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(8px);
+            display: none;
+            animation: fadeIn 0.5s ease-in-out;
+            box-sizing: border-box;
+        }
+        #form-page, #game-page, #shop-page, #leaderboard-page {
+            display: block;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        h1 {
+            color: #2c3e50;
+            font-size: 1.8em;
+            margin: 10px 0;
+            text-align: center;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+        }
+        .status-card, .form-container {
+            background: #ffffff;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            margin-bottom: 15px;
+        }
+        .status-card p {
+            margin: 8px 0;
+            font-size: 1em;
+            color: #34495e;
+        }
+        .button-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 8px;
+            margin: 15px 0;
+        }
+        button {
+            padding: 10px;
+            font-size: 0.9em;
+            cursor: pointer;
+            background: linear-gradient(45deg, #e67e22, #d35400);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+        button:disabled {
+            background: #cccccc;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        #message, #shop-message, #leaderboard-message, #form-message {
+            color: #c0392b;
+            font-weight: bold;
+            margin: 8px 0;
+            font-size: 0.9em;
+            text-align: center;
+        }
+        input, select {
+            padding: 10px;
+            margin: 8px 0;
+            font-size: 0.9em;
+            border-radius: 6px;
+            border: 1px solid #ddd;
+            width: 100%;
+            max-width: 100%;
+            box-sizing: border-box;
+        }
+        .form-container label {
+            font-size: 1em;
+            color: #2c3e50;
+            margin-bottom: 5px;
+            display: block;
+        }
+        #leaderboard-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+            background: #fff;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        #leaderboard-table th, #leaderboard-table td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: center;
+            color: #34495e;
+            font-size: 0.9em;
+        }
+        #leaderboard-table th {
+            background: linear-gradient(45deg, #e67e22, #d35400);
+            color: white;
+        }
+        #leaderboard-table tr:nth-child(even) {
+            background: #f2f2f2;
+        }
+        #leaderboard-table tr.player {
+            background: #ffe8d6;
+            font-weight: bold;
+        }
+        #comment-modal, #event-modal, #no-customer-modal, #loading-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        .modal-content {
+            background: #ffffff;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+            max-width: 90%;
+            width: 400px;
+            text-align: center;
+            box-sizing: border-box;
+        }
+        .modal-content p {
+            margin: 10px 0;
+            font-size: 1em;
+            color: #34495e;
+        }
+        .modal-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-top: 15px;
+        }
+        .loading-bar-container {
+            width: 80%;
+            height: 20px;
+            background: #ddd;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 10px auto;
+        }
+        .loading-bar {
+            width: 0;
+            height: 100%;
+            background: linear-gradient(45deg, #e67e22, #d35400);
+            animation: load 2s linear forwards;
+        }
+        @keyframes load {
+            from { width: 0; }
+            to { width: 100%; }
+        }
+    </style>
 </head>
 <body>
-  <h1 style="text-align:center;">🎭 ACTOR SIMULATOR</h1>
-
-  <div id="profileForm" style="display:none;">
-    <h2>📋 Create Your Actor Profile</h2>
-    <input type="text" id="fullName" placeholder="Full Name">
-    <input type="text" id="stageName" placeholder="Stage Name">
-    <input type="number" id="age" placeholder="Age (17-60)" min="17" max="60">
-    <input type="text" id="city" placeholder="City">
-    <label>📅 Starting Date:</label>
-    <input type="date" id="startDate" min="2025-01-01" max="2028-12-31">
-    <label>💱 Choose Currency:</label>
-    <select id="currency">
-      <option value="$">$ Dollar</option>
-      <option value="€">€ Euro</option>
-      <option value="£">£ Pound</option>
-    </select>
-    <button onclick="startGame()">Start My Acting Career</button>
-  </div>
-
-  <div id="game" style="display:none;">
-  <div id="topButtons">
-    <button onclick="saveGame()">💾 Save</button>
-    <button onclick="resetGame()">🔄 Reset</button>
-  </div>
-  <div id="nextWeekContainer">
-    <button id="nextWeekBtn" onclick="nextWeek()">➡️ Next Week</button>
-  </div>
-
-  <div id="saveNotification">Game Saved!</div>
-
-  <h2>🎬 Welcome, <span id="nameDisplay"></span></h2>
-  <p><strong>From:</strong> <span id="cityDisplay"></span></p>
-  <p><strong>Age:</strong> <span id="ageDisplay"></span></p>
-  <p><strong>Started:</strong> <span id="startDateDisplay"></span></p>
-
-  <div id="stats">
-    <div class="stat-card">📱 Followers<br><span id="followers">10</span></div>
-    <div class="stat-card">💰 Money<br><span id="currencySymbol">$</span><span id="money">500</span></div>
-    <div class="stat-card">🌟 Fame<br><span id="fame">1</span>/100</div>
-    <div class="stat-card">🎭 Skill<br><span id="skill">Beginner</span></div>
-    <div class="stat-card">⚡ Energy<br><span id="energy">100</span>/100</div>
-    <div class="stat-card">📅 Year & Week<br><span id="weekNum">Year 1, Week 1</span></div>
-    <div class="stat-card">🎬 Blockbusters<br><span id="blockbusters">0</span></div>
-    <div class="stat-card">📜 Scripts<br><span id="scripts">0</span></div>
-    <div class="stat-card">💍 Status<br><span id="marriageStatus">Single</span></div>
-  </div>
-
-  <h3>🎯 This Week – Choose your actions:</h3>
-  <div id="weekChoices">
-    <button class="choice-btn" onclick="chooseAction(1, 50)">🎤 Audition ($1,000) -50⚡</button>
-    <button class="choice-btn" onclick="chooseAction(2, 15)">📲 Post TikTok -15⚡</button>
-    <button class="choice-btn" onclick="chooseAction(3, 30)">🎓 Attend Workshop -30⚡</button>
-    <button class="choice-btn" onclick="practice()">🧘 Practice Acting -30⚡</button>
-    <button class="choice-btn" onclick="chooseAction(4, 20)">🤝 Hire Talent Agent ($2,000) -20⚡</button>
-    <button class="choice-btn" onclick="chooseAction(5, 30)">💼 Take a Side Job -30⚡</button>
-    <button class="choice-btn" id="blockbusterBtn" onclick="chooseAction(6, 40)">🎬 Hire for Blockbuster Movie -40⚡</button>
-    <button class="choice-btn" id="writeScriptBtn" onclick="writeScript()">✍️ Write Script -30⚡</button>
-    <button class="choice-btn" id="sellScriptBtn" onclick="sellScript()">💸 Sell Script -20⚡</button>
-    <button class="choice-btn" id="aListPartyBtn" onclick="attendAListParty()">🥂 Attend A-List Party ($2,500) -25⚡</button>
-    <button class="choice-btn" id="voiceActBtn" onclick="voiceActVideoGame()">🎮 Voice Act in Video Game -30⚡</button>
-    <button class="choice-btn" id="endorsementBtn" onclick="doBrandEndorsement()">📺 Do Brand Endorsement Deal ($1,000) -20⚡</button>
-    <button class="choice-btn" id="networkingBtn" onclick="attendNetworkingEvent()">🤝 Attend Industry Networking Event ($2,000) -25⚡</button>
-    <button class="choice-btn" id="merchLineBtn" onclick="launchMerchLine()">🛍️ Launch Merchandise Line ($15,000) -40⚡</button>
-  </div>
-
-  <h3>🛍️ Lifestyle Purchases</h3>
-  <div id="lifestyleChoices">
-    <!-- Lifestyle buttons will be dynamically generated -->
-  </div>
-
-  <div id="log"></div>
-</div>
-
-  <!-- Modal for Notifications -->
-  <div id="modal">
-    <div class="modal-content">
-      <p id="modalMessage"></p>
-      <div id="modalButtons" class="modal-buttons">
-        <button class="modal-btn yes" onclick="resolveModal(true)">Yes</button>
-        <button class="modal-btn no" onclick="resolveModal(false)">No</button>
-      </div>
-      <div id="modalOkButton" class="modal-ok-button">
-        <button class="modal-btn ok" onclick="resolveModal(true)">OK</button>
-      </div>
+    <!-- Form Page -->
+    <div id="form-page" class="page">
+        <h1>Welcome to Barbing Simulator</h1>
+        <div class="form-container">
+            <label for="real-name">Your Real Name:</label>
+            <input type="text" id="real-name" placeholder="Enter your real name">
+            <label for="shop-name">Shop Name (Barbing Saloon will be added):</label>
+            <input type="text" id="shop-name" placeholder="Enter shop name">
+            <label for="start-date">Starting Date:</label>
+            <input type="date" id="start-date" value="2025-08-10">
+            <label for="difficulty">Difficulty Level:</label>
+            <select id="difficulty">
+                <option value="Easy">Easy</option>
+                <option value="Normal" selected>Normal</option>
+                <option value="Hard">Hard</option>
+            </select>
+            <label for="country">Country:</label>
+            <select id="country" onchange="updateCurrency()">
+                <option value="Nigeria" selected>Nigeria</option>
+                <option value="United States">United States</option>
+                <option value="United Kingdom">United Kingdom</option>
+                <option value="Germany">Germany</option>
+                <option value="Japan">Japan</option>
+                <option value="India">India</option>
+                <option value="South Africa">South Africa</option>
+            </select>
+            <label for="currency">Currency:</label>
+            <input type="text" id="currency" readonly value="₦">
+            <button onclick="startGame()">Start Game</button>
+            <div id="form-message"></div>
+        </div>
     </div>
-  </div>
 
-  <script>
-    let money;
-let fame = 1;
-let followers = 10;
-let skill = "Beginner";
-let week = 1;
-let year = 1; // New variable to track the current year
-let energy = 100;
-let currencySymbol = "$";
-let practiceXP = 0;
-let startDate = "";
-let age = 17;
-let hasAgent = false;
-let blockbusters = 0;
-let scripts = 0;
-let scriptQualities = [];
-let voiceActingIncome = 0;
-let voiceActingWeeks = 0;
-let merchIncome = 0;
-let merchWeeks = 0;
-let merchFailed = false; // Track if merch line has failed
-let purchasedItems = [];
-let isTikTokMonetized = false;
-let tiktokIncome = 0;
-let tiktokMonetizationWeeks = 0;
-let isMarried = false;
-let spouseName = "";
-// New variables for cooldowns and availability
-let actionCooldowns = {
-  writeScript: 0,       // Weeks until Write Script is available again
-  blockbuster: 0,       // Weeks until Hire for Blockbuster Movie is available
-  aListParty: 0,        // Weeks until Attend A-List Party is available
-  voiceAct: 0,          // Weeks until Voice Act in Video Game is available
-  endorsement: 0,       // Weeks until Do Brand Endorsement Deal is available
-  networking: 0,        // Weeks until Attend Industry Networking Event is available
-  merchLine: 0          // Weeks until Launch Merchandise Line is available
-};
-let actionAvailability = {
-  writeScript: true,    // Always available initially, but limited by cooldown
-  blockbuster: false,
-  aListParty: false,
-  voiceAct: false,
-  endorsement: false,
-  networking: false,
-  merchLine: false
-};
-let actionUses = {
-  writeScript: 0,       // Track total uses of Write Script
-  blockbuster: 0,       // Track total uses of Hire for Blockbuster Movie
-  aListParty: 0,        // Track total uses of Attend A-List Party
-  voiceAct: 0,          // Track total uses of Voice Act in Video Game
-  endorsement: 0,       // Track total uses of Do Brand Endorsement Deal
-  networking: 0,        // Track total uses of Attend Industry Networking Event
-  merchLine: 0          // Track total uses of Launch Merchandise Line
-};
-const MAX_ACTION_USES_PER_YEAR = {
-  writeScript: 4,       // Max 4 scripts per year
-  blockbuster: 1,       // Max 1 blockbuster role per year
-  aListParty: 3,        // Max 3 parties per year
-  voiceAct: 2,          // Max 2 voice acting gigs per year
-  endorsement: 3,       // Max 3 endorsements per year
-  networking: 3,        // Max 3 networking events per year
-  merchLine: 1          // Max 1 merch line launch per year
-};
-let modalResolve;
-const SAVE_VERSION = "1.2";
+    <!-- Main Game Page -->
+    <div id="game-page" class="page">
+        <h1 id="game-title">Barbing Simulator Game</h1>
+        <div class="status-card">
+            <p>Date & Time: <span id="datetime">11:29 PM WAT, Sunday, August 10, 2025</span></p>
+            <p>Money: <span id="money">100</span></p>
+            <p>Energy: <span id="energy">100</span></p>
+            <p>Reputation: <span id="reputation">1</span></p>
+            <p>Customers Barbered Today: <span id="customers">0</span></p>
+            <p>Housing: <span id="housing">None</span></p>
+            <p>Car: <span id="car">None</span></p>
+            <p>Girlfriend: <span id="girlfriend">None</span></p>
+            <p>Shop Type: <span id="shop-type">Basic</span></p>
+            <p>Tools: <span id="tools">None</span></p>
+            <p>Day: <span id="day">1</span></p>
+            <p>Difficulty: <span id="difficulty-display">Normal</span></p>
+        </div>
+        <div id="message"></div>
+        <div class="button-grid">
+            <button id="cut-hair-btn" onclick="cutHair()">Cut Hair (10, -5 Energy)</button>
+            <button id="buy-food-btn" onclick="buyFood()">Buy Food (5, +20 Energy)</button>
+            <button id="rent-house-btn" onclick="rentHouse()">Rent House (50/month)</button>
+            <button onclick="showShopPage()">Go to Shop</button>
+            <button onclick="showLeaderboardPage()">View Leaderboard</button>
+            <button onclick="saveGame()">Save Game</button>
+            <button onclick="resetGame()">Reset Game</button>
+            <button onclick="startNextDay()">Next Day</button>
+            <button onclick="startFreeDay()">Free Day</button>
+        </div>
+    </div>
 
-    const lifestyleItems = [
-      { name: "Designer Clothes", price: 20000, fameReward: 0.2 },
-      { name: "Gold Necklace", price: 50000, fameReward: 0.3 },
-      { name: "Sports Car", price: 100000, fameReward: 0.4 },
-      { name: "Luxury Watch", price: 250000, fameReward: 0.5 },
-      { name: "Penthouse Apartment", price: 1000000, fameReward: 0.6 },
-      { name: "Luxury Boutique", price: 5000000, fameReward: 0.7 },
-      { name: "Mansion", price: 10000000, fameReward: 0.8 },
-      { name: "Yacht", price: 50000000, fameReward: 0.9 },
-      { name: "Customized Private Jet", price: 1000000000, fameReward: 1 }
-    ];
+    <!-- Shop Page -->
+    <div id="shop-page" class="page">
+        <h1>Shop</h1>
+        <div class="status-card">
+            <p>Money: <span id="shop-money">100</span></p>
+            <p>Reputation: <span id="shop-reputation">1</span></p>
+            <p>Housing: <span id="shop-housing">None</span></p>
+            <p>Car: <span id="shop-car">None</span></p>
+            <p>Girlfriend: <span id="shop-girlfriend">None</span></p>
+            <p>Shop Type: <span id="shop-shop-type">Basic</span></p>
+            <p>Tools: <span id="shop-tools">None</span></p>
+        </div>
+        <div id="shop-message"></div>
+        <h3>Buy a House</h3>
+        <select id="house-select">
+            <option value="">Select House Type</option>
+            <option value="Apartment|1000">Apartment (1000)</option>
+            <option value="Bungalow|2000">Bungalow (2000)</option>
+            <option value="Mansion|5000">Mansion (5000)</option>
+            <option value="Condo|1500">Condo (1500)</option>
+            <option value="Villa|3000">Villa (3000)</option>
+            <option value="Penthouse|7000">Penthouse (7000)</option>
+        </select>
+        <button onclick="buyHouse()">Buy House</button>
+        <h3>Buy a Car</h3>
+        <select id="car-select">
+            <option value="">Select Car</option>
+            <option value="Toyota Corolla|500">Toyota Corolla (500)</option>
+            <option value="Honda Civic|700">Honda Civic (700)</option>
+            <option value="BMW X5|1500">BMW X5 (1500)</option>
+        </select>
+        <button onclick="buyCar()">Buy Car</button>
+        <h3>Find a Girlfriend</h3>
+        <select id="girlfriend-select">
+            <option value="">Select Girlfriend</option>
+            <option value="Amara|50">Amara (50/month)</option>
+            <option value="Chloe|100">Chloe (100/month)</option>
+            <option value="Sophia|150">Sophia (150/month)</option>
+        </select>
+        <button onclick="getGirlfriend()">Get Girlfriend</button>
+        <h3>Buy Barbing Tools</h3>
+        <select id="tool-select">
+            <option value="">Select Tool</option>
+            <option value="Clippers|100">Clippers (100, +0.5 Reputation)</option>
+            <option value="Scissors|50">Scissors (50, +0.5 Reputation)</option>
+            <option value="Sterilizer|150">Sterilizer (150, +0.5 Reputation)</option>
+            <option value="Trimmer|75">Trimmer (75, +0.5 Reputation)</option>
+            <option value="Razor|30">Razor (30, +0.25 Reputation)</option>
+            <option value="Hair Dryer|120">Hair Dryer (120, +0.75 Reputation)</option>
+        </select>
+        <button onclick="buyTool()">Buy Tool</button>
+        <h3>Upgrade Shop</h3>
+        <select id="shop-upgrade-select">
+            <option value="">Select Shop Upgrade</option>
+            <option value="Basic Shop|500">Basic Shop (500, +1 Reputation)</option>
+            <option value="Modern Shop|1000">Modern Shop (1000, +2 Reputation)</option>
+            <option value="Luxury Shop|2000">Luxury Shop (2000, +3 Reputation)</option>
+            <option value="Premium Shop|3000">Premium Shop (3000, +4 Reputation)</option>
+            <option value="Elite Shop|5000">Elite Shop (5000, +5 Reputation)</option>
+            <option value="Ultimate Shop|10000">Ultimate Shop (10000, +6 Reputation)</option>
+        </select>
+        <button onclick="upgradeShop()">Upgrade Shop</button>
+        <div class="button-grid">
+            <button onclick="showGamePage()">Back to Game</button>
+        </div>
+    </div>
 
-    function getStartingMoney(currency) {
-      switch (currency) {
-        case "$": return 500;
-        case "€": return 425;
-        case "£": return 375;
-        default: return 500;
-      }
-    }
+    <!-- Leaderboard Page -->
+    <div id="leaderboard-page" class="page">
+        <h1>Barber Leaderboard</h1>
+        <div class="status-card">
+            <p>Your Rank: <span id="player-rank">N/A</span></p>
+            <p>Money: <span id="leaderboard-money">100</span></p>
+            <p>Reputation: <span id="leaderboard-reputation">1</span></p>
+        </div>
+        <div id="leaderboard-message"></div>
+        <table id="leaderboard-table">
+            <thead>
+                <tr>
+                    <th>Rank</th>
+                    <th>Barber Name</th>
+                    <th>Reputation</th>
+                    <th>Net Worth</th>
+                </tr>
+            </thead>
+            <tbody id="leaderboard-body"></tbody>
+        </table>
+        <div class="button-grid">
+            <button onclick="showGamePage()">Back to Game</button>
+        </div>
+    </div>
 
-    function convertCurrency(amount) {
-      switch (currencySymbol) {
-        case "€": return Math.round(amount * 0.85);
-        case "£": return Math.round(amount * 0.75);
-        default: return amount;
-      }
-    }
+    <!-- Comment Modal -->
+    <div id="comment-modal">
+        <div class="modal-content">
+            <p id="comment-text"></p>
+            <div class="modal-buttons">
+                <button id="response-1" onclick="handleCommentResponse(0)"></button>
+                <button id="response-2" onclick="handleCommentResponse(1)"></button>
+            </div>
+        </div>
+    </div>
 
-function formatMoney(amount) {
-  const absAmount = Math.abs(amount);
-  let formatted = "";
-  let suffix = "";
+    <!-- Event Modal -->
+    <div id="event-modal">
+        <div class="modal-content">
+            <p id="event-text"></p>
+            <div class="modal-buttons">
+                <button id="event-response-1" onclick="handleEventResponse(0)"></button>
+                <button id="event-response-2" onclick="handleEventResponse(1)"></button>
+            </div>
+        </div>
+    </div>
 
-  if (absAmount >= 1_000_000_000) {
-    formatted = (amount / 1_000_000_000).toFixed(1).replace(/\.0$/, "");
-    suffix = "b";
-  } else if (absAmount >= 1_000_000) {
-    formatted = (amount / 1_000_000).toFixed(1).replace(/\.0$/, "");
-    suffix = "m";
-  } else if (absAmount >= 1_000) {
-    formatted = (amount / 1_000).toFixed(1).replace(/\.0$/, "");
-    suffix = "k";
-  } else {
-    formatted = amount.toString();
-  }
+    <!-- No Customer Modal -->
+    <div id="no-customer-modal">
+        <div class="modal-content">
+            <p id="no-customer-text">No customer at the moment. Wait or try again later.</p>
+            <div class="modal-buttons">
+                <button onclick="closeNoCustomerModal()">OK</button>
+            </div>
+        </div>
+    </div>
 
-  return `${amount < 0 ? '-' : ''}${currencySymbol}${formatted}${suffix}`;
-}
+    <!-- Loading Modal -->
+    <div id="loading-modal">
+        <div class="modal-content">
+            <p>Loading...</p>
+            <div class="loading-bar-container">
+                <div class="loading-bar"></div>
+            </div>
+        </div>
+    </div>
 
-    function getSkillByXP(xp) {
-      if (xp >= 30) return "Master";
-      if (xp >= 20) return "Pro";
-      if (xp >= 12) return "Trained";
-      if (xp >= 7) return "Improving";
-      if (xp >= 3) return "Learning";
-      return "Beginner";
-    }
+    <script>
+        let money = 100;
+        let energy = 100;
+        let reputation = 1;
+        let customersBarbered = 0;
+        let housing = "None";
+        let car = "None";
+        let girlfriend = "None";
+        let shopType = "Basic";
+        let tools = [];
+        let day = 1;
+        let daysSinceLastPayment = 0;
+        let daysSinceLastRentPayment = 0;
+        let rentActive = false;
+        let girlfriendCost = 0;
+        let realName = "";
+        let shopName = "";
+        let difficulty = "Normal";
+        let currentDate = new Date('2025-08-10T23:29:00+01:00');
+        let currentComment = null;
+        let clockInterval = null;
+        let country = "Nigeria";
+        let currencySymbol = "₦";
+        let currentEvent = null;
+        let dailyCustomerFactor = 1.0;
+        let exchangeRate = 1;
 
-    function showModal(message, type = "choice") {
-      return new Promise((resolve) => {
-        document.getElementById("modalMessage").textContent = message;
-        const modalButtons = document.getElementById("modalButtons");
-        const modalOkButton = document.getElementById("modalOkButton");
-        modalButtons.className = "modal-buttons" + (type === "info" ? " info" : "");
-        modalOkButton.className = "modal-ok-button" + (type === "info" ? " info" : "");
-        document.getElementById("modal").style.display = "flex";
-        modalResolve = resolve;
-      });
-    }
+        const barbers = [
+            { name: "Tony Snips", reputation: 70, netWorth: 8000 },
+            { name: "Lila Cuts", reputation: 65, netWorth: 6000 },
+            { name: "Mike Razor", reputation: 55, netWorth: 4000 },
+            { name: "Sarah Shears", reputation: 80, netWorth: 10000 },
+            { name: "Jake Fade", reputation: 50, netWorth: 2500 },
+            { name: "Emma Trim", reputation: 60, netWorth: 5000 },
+            { name: "Chris Clip", reputation: 55, netWorth: 3500 },
+            { name: "Nina Buzz", reputation: 75, netWorth: 7000 }
+        ];
 
-    function showInfoModal(message) {
-      return showModal(message, "info");
-    }
+        const commentTypes = [
+            { type: 'positive', text: 'Nice cut! You’re off to a good start.', reputation: 0.5, responses: [
+                { reply: 'Thanks for the support!', emoji: '😊', repChange: -0.5 },
+                { reply: 'Glad you liked it!', emoji: '✅', repChange: 0.5 }
+            ]},
+            { type: 'positive', text: 'Clean fade, I’ll tell my friends!', reputation: 1, responses: [
+                { reply: 'Appreciate the word-of-mouth!', emoji: '😊', repChange: -0.5 },
+                { reply: 'Thanks, come back soon!', emoji: '✅', repChange: 0.5 }
+            ]},
+            { type: 'positive', text: 'Pretty good for a new barber!', reputation: 0.5, responses: [
+                { reply: 'Thanks for the encouragement!', emoji: '😊', repChange: -0.5 },
+                { reply: 'I’m learning, glad you approve!', emoji: '✅', repChange: 0.5 }
+            ]},
+            { type: 'positive', text: 'Solid haircut, keep it up!', reputation: 1, responses: [
+                { reply: 'Thanks, I’m trying my best!', emoji: '😊', repChange: -0.5 },
+                { reply: 'Appreciate the feedback!', emoji: '✅', repChange: 0.5 }
+            ]},
+            { type: 'negative', text: 'The cut was uneven, needs work.', reputation: -3, responses: [
+                { reply: 'Sorry, I’ll be more careful next time.', emoji: '✅', repChange: 0.5 },
+                { reply: 'Thanks for the feedback.', emoji: '😣', repChange: -1 }
+            ]},
+            { type: 'negative', text: 'You took too long, I was late!', reputation: -4, responses: [
+                { reply: 'Apologies, I’ll speed up next time.', emoji: '✅', repChange: 0.5 },
+                { reply: 'Noted, thanks for letting me know.', emoji: '😣', repChange: -1 }
+            ]},
+            { type: 'negative', text: 'Not what I asked for, disappointed.', reputation: -4, responses: [
+                { reply: 'I’m sorry, let me make it right.', emoji: '✅', repChange: 0.5 },
+                { reply: 'Thanks for the input.', emoji: '😣', repChange: -1 }
+            ]},
+            { type: 'negative', text: 'Your tools look old, upgrade them.', reputation: -3, responses: [
+                { reply: 'Sorry, I’m working on getting better tools.', emoji: '✅', repChange: 0.5 },
+                { reply: 'Thanks for the suggestion.', emoji: '😣', repChange: -1 }
+            ]},
+            { type: 'abusive', text: 'Horrible haircut! You’re clueless!', reputation: -6, responses: [
+                { reply: 'I’m so sorry, can I fix it for free?', emoji: '✅', repChange: 0.5 },
+                { reply: 'Apologies for the bad experience.', emoji: '😣', repChange: -1 }
+            ]},
+            { type: 'abusive', text: 'Worst barber ever, don’t quit your day job!', reputation: -8, responses: [
+                { reply: 'Sorry you feel that way, I’ll improve.', emoji: '✅', repChange: 0.5 },
+                { reply: 'I apologize, I’m still learning.', emoji: '😣', repChange: -1 }
+            ]},
+            { type: 'abusive', text: 'You ruined my look, terrible service!', reputation: -7, responses: [
+                { reply: 'I’m sorry, let me make it up to you.', emoji: '✅', repChange: 0.5 },
+                { reply: 'Apologies for the mistake.', emoji: '😣', repChange: -1 }
+            ]},
+            { type: 'abusive', text: 'This place is a mess, never coming back!', reputation: -6, responses: [
+                { reply: 'Sorry, I’ll clean up and do better.', emoji: '✅', repChange: 0.5 },
+                { reply: 'I hear you, I’ll work on it.', emoji: '😣', repChange: -1 }
+            ]}
+        ];
 
-    function resolveModal(choice) {
-      document.getElementById("modal").style.display = "none";
-      modalResolve(choice);
-    }
+        const randomEvents = [
+            { text: 'You found some money on the street! Keep it or try to return it?', responses: [
+                { reply: 'Keep it', effect: () => { money += 10; reputation -= 1; showMessage('You kept the money. +' + currencySymbol + '10, -1 Reputation'); } },
+                { reply: 'Try to return it', effect: () => { reputation += 2; showMessage('You tried to return it. +2 Reputation'); } }
+            ]},
+            { text: 'A customer offers a tip but complains about the service. Accept tip or offer free fix?', responses: [
+                { reply: 'Accept tip', effect: () => { money += 5; reputation -= 2; showMessage('Accepted tip. +' + currencySymbol + '5, -2 Reputation'); } },
+                { reply: 'Offer free fix', effect: () => { reputation += 3; showMessage('Offered free fix. +3 Reputation'); } }
+            ]},
+            { text: 'Your clippers broke. Repair now or use backup?', responses: [
+                { reply: 'Repair (' + currencySymbol + '20)', effect: () => { if (money >= 20) { money -= 20; showMessage('Repaired clippers. -' + currencySymbol + '20'); } else { showMessage('Not enough money.'); } } },
+                { reply: 'Use backup', effect: () => { energy -= 10; showMessage('Used backup. -10 Energy'); } }
+            ]},
+            { text: 'A local event is happening. Participate to gain reputation?', responses: [
+                { reply: 'Participate (-10 Energy)', effect: () => { energy -= 10; reputation += 5; showMessage('Participated in event. -10 Energy, +5 Reputation'); } },
+                { reply: 'Skip', effect: () => { showMessage('Skipped the event.'); } }
+            ]},
+            { text: 'You feel ill. Rest or keep working?', responses: [
+                { reply: 'Rest', effect: () => { energy += 15; money -= 5; showMessage('Rested. +15 Energy, -' + currencySymbol + '5 (lost business)'); } },
+                { reply: 'Keep working', effect: () => { reputation -= 2; showMessage('Worked while ill. -2 Reputation'); } }
+            ]},
+            { text: 'Friend asks for free haircut. Agree or charge?', responses: [
+                { reply: ' Agree free', effect: () => { reputation += 2; showMessage('Gave free haircut. +2 Reputation'); } },
+                { reply: 'Charge', effect: () => { money += 10; reputation -= 1; showMessage('Charged friend. +' + currencySymbol + '10, -1 Reputation'); } }
+            ]}
+        ];
 
-    function showSaveNotification() {
-      const notification = document.getElementById("saveNotification");
-      notification.style.display = "block";
-      setTimeout(() => {
-        notification.style.display = "none";
-      }, 2000);
-    }
-
-    function saveGame() {
-  const data = {
-    version: SAVE_VERSION,
-    money,
-    fame,
-    followers,
-    skill,
-    week,
-    year, // Add year to saved data
-    energy,
-    currencySymbol,
-    practiceXP,
-    startDate,
-    age,
-    hasAgent,
-    blockbusters,
-    scripts,
-    scriptQualities,
-    voiceActingIncome,
-    voiceActingWeeks,
-    merchIncome,
-    merchWeeks,
-    merchFailed,
-    purchasedItems,
-    isTikTokMonetized,
-    tiktokIncome,
-    tiktokMonetizationWeeks,
-    isMarried,
-    spouseName,
-    actionCooldowns,
-    actionAvailability,
-    actionUses,
-    fullName: document.getElementById("nameDisplay").textContent.split(" (")[1]?.replace(")", "") || "",
-    stageName: document.getElementById("nameDisplay").textContent.split(" (")[0] || "",
-    city: document.getElementById("cityDisplay").textContent || ""
-  };
-  setTimeout(() => {
-    try {
-      localStorage.setItem("actorSimSave", JSON.stringify(data));
-      showSaveNotification();
-    } catch (e) {
-      console.error("Save failed:", e);
-      showModal("Failed to save game. Try again?");
-    }
-  }, 0);
-}
-
-    function loadGame() {
-  const savedData = localStorage.getItem("actorSimSave");
-  if (!savedData) {
-    console.log("No saved game found, starting fresh.");
-    document.getElementById("profileForm").style.display = "block";
-    document.getElementById("game").style.display = "none";
-    return false;
-  }
-
-  try {
-    const data = JSON.parse(savedData);
-    // Validate save version
-    if (data.version !== SAVE_VERSION) {
-      console.warn(`Save version mismatch: expected ${SAVE_VERSION}, got ${data.version}. Starting fresh.`);
-      localStorage.removeItem("actorSimSave");
-      document.getElementById("profileForm").style.display = "block";
-      document.getElementById("game").style.display = "none";
-      return false;
-    }
-
-    // Assign values with fallbacks
-    money = Number(data.money) || getStartingMoney(data.currencySymbol || "$");
-    fame = Number(data.fame) || Number(data.reputation) || 1;
-    followers = Number(data.followers) || 10;
-    skill = data.skill || "Beginner";
-    week = Number(data.week) || 1;
-    year = Number(data.year) || 1; // Load year with fallback
-    energy = Number(data.energy) || 100;
-    currencySymbol = data.currencySymbol || "$";
-    practiceXP = Number(data.practiceXP) || 0;
-    startDate = data.startDate || "";
-    age = Number(data.age) || 17;
-    hasAgent = data.hasAgent || false;
-    blockbusters = Number(data.blockbusters) || 0;
-    scripts = Number(data.scripts) || 0;
-    scriptQualities = Array.isArray(data.scriptQualities) ? data.scriptQualities : [];
-    voiceActingIncome = Number(data.voiceActingIncome) || 0;
-    voiceActingWeeks = Number(data.voiceActingWeeks) || 0;
-    merchIncome = Number(data.merchIncome) || 0;
-    merchWeeks = Number(data.merchWeeks) || 0;
-    merchFailed = data.merchFailed || false;
-    purchasedItems = Array.isArray(data.purchasedItems) ? data.purchasedItems : [];
-    isTikTokMonetized = data.isTikTokMonetized || false;
-    tiktokIncome = Number(data.tiktokIncome) || 0;
-    tiktokMonetizationWeeks = Number(data.tiktokMonetizationWeeks) || 0;
-    isMarried = data.isMarried || false;
-    spouseName = data.spouseName || "";
-    actionCooldowns = data.actionCooldowns || {
-      writeScript: 0,
-      blockbuster: 0,
-      aListParty: 0,
-      voiceAct: 0,
-      endorsement: 0,
-      networking: 0,
-      merchLine: 0
-    };
-    actionAvailability = data.actionAvailability || {
-      writeScript: true,
-      blockbuster: false,
-      aListParty: false,
-      voiceAct: false,
-      endorsement: false,
-      networking: false,
-      merchLine: false
-    };
-    actionUses = data.actionUses || {
-      writeScript: 0,
-      blockbuster: 0,
-      aListParty: 0,
-      voiceAct: 0,
-      endorsement: 0,
-      networking: 0,
-      merchLine: 0
-    };
-
-    // Ensure critical UI fields are set
-    skill = getSkillByXP(practiceXP);
-    document.getElementById("currencySymbol").textContent = currencySymbol;
-    document.getElementById("weekNum").textContent = week;
-    document.getElementById("startDateDisplay").textContent = startDate;
-    document.getElementById("ageDisplay").textContent = age;
-    document.getElementById("nameDisplay").textContent = data.stageName ? `${data.stageName} (${data.fullName || ''})` : "Unknown Actor";
-    document.getElementById("cityDisplay").textContent = data.city || "Unknown City";
-    document.getElementById("profileForm").style.display = "none";
-    document.getElementById("game").style.display = "block";
-
-    updateStats();
-    updateLifestyleButtons();
-    checkEnergy();
-
-    console.log("Game loaded successfully.");
-    return true;
-  } catch (e) {
-    console.error("Load failed:", e);
-    localStorage.removeItem("actorSimSave"); // Clear corrupted save
-    document.getElementById("profileForm").style.display = "block";
-    document.getElementById("game").style.display = "none";
-    showInfoModal("Failed to load saved game due to an error. Starting fresh.");
-    return false;
-  }
-}
-
-    function updateLifestyleButtons() {
-  const lifestyleChoices = document.getElementById("lifestyleChoices");
-  lifestyleChoices.innerHTML = "";
-  lifestyleItems.forEach((item, index) => {
-    const convertedPrice = convertCurrency(item.price);
-    const isPurchased = purchasedItems.includes(index);
-    const button = document.createElement("button");
-    button.className = "choice-btn";
-    button.textContent = isPurchased
-      ? `🛍️ ${item.name} (Owned)`
-      : `🛍️ Buy ${item.name} (${currencySymbol}${convertedPrice}, +${item.fameReward} Fame)`;
-    button.disabled = isPurchased || money < convertedPrice;
-    button.onclick = () => buyLifestyleItem(index);
-    lifestyleChoices.appendChild(button);
-  });
-
-  // Add Get Married button
-  const marriageButton = document.createElement("button");
-  marriageButton.className = "choice-btn";
-  marriageButton.textContent = isMarried
-    ? `💍 Married to ${spouseName}`
-    : `💍 Get Married (${currencySymbol}10,000, +0.5 Fame, +100 Followers)`;
-  marriageButton.disabled = isMarried || age < 20 || money < convertCurrency(10000) || fame < 20 || energy < 30;
-  marriageButton.onclick = getMarried;
-  lifestyleChoices.appendChild(marriageButton);
-}
-
-    async function buyLifestyleItem(itemIndex) {
-      const item = lifestyleItems[itemIndex];
-      const convertedPrice = convertCurrency(item.price);
-
-      if (money < convertedPrice) {
-        await showInfoModal(`Not enough money to purchase ${item.name} (${currencySymbol}${convertedPrice} required).`);
-        return;
-      }
-      if (purchasedItems.includes(itemIndex)) {
-        await showInfoModal(`You already own ${item.name}.`);
-        return;
-      }
-
-      money -= convertedPrice;
-      fame += item.fameReward;
-      purchasedItems.push(itemIndex);
-
-      await showInfoModal(`🗓️ Week ${week} Action:\n🛍️ Purchased ${item.name}! +${item.fameReward} Fame`);
-      fame = Math.floor(fame || 1);
-      updateStats();
-      updateLifestyleButtons();
-      checkEnergy();
-      saveGame();
-    }
-
-function updateWeekChoices() {
-  const buttons = {
-    writeScript: document.getElementById("writeScriptBtn"),
-    blockbuster: document.getElementById("blockbusterBtn"),
-    aListParty: document.getElementById("aListPartyBtn"),
-    voiceAct: document.getElementById("voiceActBtn"),
-    endorsement: document.getElementById("endorsementBtn"),
-    networking: document.getElementById("networkingBtn"),
-    merchLine: document.getElementById("merchLineBtn")
-  };
-
-  // Write Script
-  if (actionCooldowns.writeScript > 0) {
-    buttons.writeScript.textContent = `✍️ Write Script (Available in ${actionCooldowns.writeScript} weeks)`;
-    buttons.writeScript.disabled = true;
-  } else if (actionUses.writeScript >= MAX_ACTION_USES_PER_YEAR.writeScript) {
-    buttons.writeScript.textContent = `✍️ Write Script (Yearly limit reached)`;
-    buttons.writeScript.disabled = true;
-  } else {
-    buttons.writeScript.textContent = `✍️ Write Script -30⚡`;
-    buttons.writeScript.disabled = practiceXP < 7 || energy < 30;
-  }
-
-  // Hire for Blockbuster Movie
-  if (actionCooldowns.blockbuster > 0) {
-    buttons.blockbuster.textContent = `🎬 Hire for Blockbuster Movie (Available in ${actionCooldowns.blockbuster} weeks)`;
-    buttons.blockbuster.disabled = true;
-  } else if (actionUses.blockbuster >= MAX_ACTION_USES_PER_YEAR.blockbuster) {
-    buttons.blockbuster.textContent = `🎬 Hire for Blockbuster Movie (Yearly limit reached)`;
-    buttons.blockbuster.disabled = true;
-  } else if (!actionAvailability.blockbuster) {
-    buttons.blockbuster.textContent = `🎬 Hire for Blockbuster Movie (No roles available)`;
-    buttons.blockbuster.disabled = true;
-  } else {
-    buttons.blockbuster.textContent = `🎬 Hire for Blockbuster Movie -40⚡`;
-    buttons.blockbuster.disabled = fame < 45 || energy < 40;
-  }
-
-  // Attend A-List Party
-  if (actionCooldowns.aListParty > 0) {
-    buttons.aListParty.textContent = `🥂 Attend A-List Party (Available in ${actionCooldowns.aListParty} weeks)`;
-    buttons.aListParty.disabled = true;
-  } else if (actionUses.aListParty >= MAX_ACTION_USES_PER_YEAR.aListParty) {
-    buttons.aListParty.textContent = `🥂 Attend A-List Party (Yearly limit reached)`;
-    buttons.aListParty.disabled = true;
-  } else if (!actionAvailability.aListParty) {
-    buttons.aListParty.textContent = `🥂 Attend A-List Party (No invitations)`;
-    buttons.aListParty.disabled = true;
-  } else {
-    buttons.aListParty.textContent = `🥂 Attend A-List Party (${currencySymbol}2,500) -25⚡`;
-    buttons.aListParty.disabled = money < 2500 || fame < 20 || energy < 25;
-  }
-
-  // Voice Act in Video Game
-  if (actionCooldowns.voiceAct > 0) {
-    buttons.voiceAct.textContent = `🎮 Voice Act in Video Game (Available in ${actionCooldowns.voiceAct} weeks)`;
-    buttons.voiceAct.disabled = true;
-  } else if (actionUses.voiceAct >= MAX_ACTION_USES_PER_YEAR.voiceAct) {
-    buttons.voiceAct.textContent = `🎮 Voice Act in Video Game (Yearly limit reached)`;
-    buttons.voiceAct.disabled = true;
-  } else if (!actionAvailability.voiceAct) {
-    buttons.voiceAct.textContent = `🎮 Voice Act in Video Game (No roles available)`;
-    buttons.voiceAct.disabled = true;
-  } else {
-    buttons.voiceAct.textContent = `🎮 Voice Act in Video Game -30⚡`;
-    buttons.voiceAct.disabled = fame < 15 || energy < 30;
-  }
-
-  // Do Brand Endorsement Deal
-  if (actionCooldowns.endorsement > 0) {
-    buttons.endorsement.textContent = `📺 Do Brand Endorsement Deal (Available in ${actionCooldowns.endorsement} weeks)`;
-    buttons.endorsement.disabled = true;
-  } else if (actionUses.endorsement >= MAX_ACTION_USES_PER_YEAR.endorsement) {
-    buttons.endorsement.textContent = `📺 Do Brand Endorsement Deal (Yearly limit reached)`;
-    buttons.endorsement.disabled = true;
-  } else if (!actionAvailability.endorsement) {
-    buttons.endorsement.textContent = `📺 Do Brand Endorsement Deal (No offers available)`;
-    buttons.endorsement.disabled = true;
-  } else {
-    buttons.endorsement.textContent = `📺 Do Brand Endorsement Deal (${currencySymbol}1,000) -20⚡`;
-    buttons.endorsement.disabled = money < 1000 || fame < 30 || energy < 20;
-  }
-
-  // Attend Industry Networking Event
-  if (actionCooldowns.networking > 0) {
-    buttons.networking.textContent = `🤝 Attend Industry Networking Event (Available in ${actionCooldowns.networking} weeks)`;
-    buttons.networking.disabled = true;
-  } else if (actionUses.networking >= MAX_ACTION_USES_PER_YEAR.networking) {
-    buttons.networking.textContent = `🤝 Attend Industry Networking Event (Yearly limit reached)`;
-    buttons.networking.disabled = true;
-  } else if (!actionAvailability.networking) {
-    buttons.networking.textContent = `🤝 Attend Industry Networking Event (No events available)`;
-    buttons.networking.disabled = true;
-  } else {
-    buttons.networking.textContent = `🤝 Attend Industry Networking Event (${currencySymbol}2,000) -25⚡`;
-    buttons.networking.disabled = money < 2000 || fame < 25 || practiceXP < 20 || energy < 25;
-  }
-
-  // Launch Merchandise Line
-  if (actionCooldowns.merchLine > 0) {
-    buttons.merchLine.textContent = `🛍️ Launch Merchandise Line (Available in ${actionCooldowns.merchLine} weeks)`;
-    buttons.merchLine.disabled = true;
-  } else if (actionUses.merchLine >= MAX_ACTION_USES_PER_YEAR.merchLine) {
-    buttons.merchLine.textContent = `🛍️ Launch Merchandise Line (Yearly limit reached)`;
-    buttons.merchLine.disabled = true;
-  } else if (!actionAvailability.merchLine) {
-    buttons.merchLine.textContent = `🛍️ Launch Merchandise Line (Not trending now)`;
-    buttons.merchLine.disabled = true;
-  } else {
-    buttons.merchLine.textContent = `🛍️ Launch Merchandise Line (${currencySymbol}15,000) -40⚡`;
-    buttons.merchLine.disabled = money < 15000 || fame < 35 || followers < 500 || energy < 40;
-  }
-}
-
-    function generateReview(isSuccess, reward) {
-      const critics = [
-        { name: "Jane Doe", outlet: "Variety" },
-        { name: "John Smith", outlet: "The Hollywood Reporter" },
-        { name: "Emma Lee", outlet: "Screen Daily" },
-        { name: "Michael Brown", outlet: "IndieWire" },
-        { name: "Sarah Chen", outlet: "The Wrap" }
-      ];
-      const positiveReviews = [
-        "A captivating performance that lights up the screen.",
-        "Shows remarkable emotional depth for their experience level.",
-        "A breakout star with undeniable charisma.",
-        "Delivers a nuanced portrayal that resonates with audiences.",
-        "Commands every scene with confidence and skill."
-      ];
-      const neutralReviews = [
-        "A solid effort, though there's room to grow.",
-        "Shows promise but needs more polish in key moments.",
-        "A decent performance that blends into the ensemble.",
-        "Competent acting, but lacks a defining spark.",
-        "A serviceable turn, with potential for more impact."
-      ];
-      const negativeReviews = [
-        "Struggles to connect emotionally with the role.",
-        "Performance feels flat and uninspired.",
-        "Lacks the screen presence needed for a lead role.",
-        "Delivery feels forced and unconvincing.",
-        "Seems out of their depth in this production."
-      ];
-
-      const critic = critics[Math.floor(Math.random() * critics.length)];
-      let reviewSnippets = [];
-      let fameChange = 0;
-
-      if (practiceXP >= 20 && fame >= 50 && isSuccess) {
-        reviewSnippets = [positiveReviews[Math.floor(Math.random() * positiveReviews.length)]];
-        if (Math.random() < 0.3) {
-          reviewSnippets.push(positiveReviews[Math.floor(Math.random() * positiveReviews.length)]);
-          fameChange = 0.1;
-        } else {
-          reviewSnippets.push(neutralReviews[Math.floor(Math.random() * neutralReviews.length)]);
+        function saveGame() {
+            const gameState = {
+                money: money,
+                energy: energy,
+                reputation: reputation,
+                customersBarbered: customersBarbered,
+                housing: housing,
+                car: car,
+                girlfriend: girlfriend,
+                shopType: shopType,
+                tools: tools,
+                day: day,
+                daysSinceLastPayment: daysSinceLastPayment,
+                daysSinceLastRentPayment: daysSinceLastRentPayment,
+                rentActive: rentActive,
+                girlfriendCost: girlfriendCost,
+                realName: realName,
+                shopName: shopName,
+                currentDate: currentDate.toISOString(),
+                difficulty: difficulty,
+                country: country,
+                currencySymbol: currencySymbol
+            };
+            localStorage.setItem('barbingSimulatorSave', JSON.stringify(gameState));
         }
-      } else if (practiceXP >= 7 && fame >= 20 && isSuccess) {
-        reviewSnippets = [positiveReviews[Math.floor(Math.random() * positiveReviews.length)]];
-        reviewSnippets.push(neutralReviews[Math.floor(Math.random() * neutralReviews.length)]);
-      } else if (practiceXP < 7 && fame < 20 && isSuccess) {
-        reviewSnippets = [neutralReviews[Math.floor(Math.random() * neutralReviews.length)]];
-        if (Math.random() < 0.5) {
-          reviewSnippets.push(positiveReviews[Math.floor(Math.random() * positiveReviews.length)]);
-        } else {
-          reviewSnippets.push(neutralReviews[Math.floor(Math.random() * neutralReviews.length)]);
+
+        function loadGame() {
+            const savedState = localStorage.getItem('barbingSimulatorSave');
+            if (savedState) {
+                const gameState = JSON.parse(savedState);
+                money = gameState.money || 100;
+                energy = gameState.energy || 100;
+                reputation = gameState.reputation || 1;
+                customersBarbered = gameState.customersBarbered || 0;
+                housing = gameState.housing || "None";
+                car = gameState.car || "None";
+                girlfriend = gameState.girlfriend || "None";
+                shopType = gameState.shopType || "Basic";
+                tools = gameState.tools || [];
+                day = gameState.day || 1;
+                daysSinceLastPayment = gameState.daysSinceLastPayment || 0;
+                daysSinceLastRentPayment = gameState.daysSinceLastRentPayment || 0;
+                rentActive = gameState.rentActive || false;
+                girlfriendCost = gameState.girlfriendCost || 0;
+                realName = gameState.realName || "";
+                shopName = gameState.shopName || "";
+                currentDate = new Date(gameState.currentDate || '2025-08-10T23:29:00+01:00');
+                difficulty = gameState.difficulty || "Normal";
+                country = gameState.country || "Nigeria";
+                currencySymbol = gameState.currencySymbol || "₦";
+                if (realName && shopName) {
+                    showGamePage();
+                } else {
+                    showFormPage();
+                    document.getElementById('real-name').value = realName;
+                    document.getElementById('shop-name').value = shopName.replace(' Barbing Saloon', '');
+                    document.getElementById('start-date').value = currentDate.toISOString().split('T')[0];
+                    document.getElementById('difficulty').value = difficulty;
+                    document.getElementById('country').value = country;
+                    updateCurrency();
+                }
+            } else {
+                showFormPage();
+            }
         }
-      } else if (!isSuccess) {
-        reviewSnippets = [negativeReviews[Math.floor(Math.random() * negativeReviews.length)]];
-        if (Math.random() < 0.5) {
-          reviewSnippets.push(neutralReviews[Math.floor(Math.random() * neutralReviews.length)]);
-        } else {
-          reviewSnippets.push(negativeReviews[Math.floor(Math.random() * negativeReviews.length)]);
-          if (practiceXP < 7 && fame < 20) fameChange = -0.1;
+
+        function resetGame() {
+            localStorage.removeItem('barbingSimulatorSave');
+            money = 100;
+            energy = 100;
+            reputation = 1;
+            customersBarbered = 0;
+            housing = "None";
+            car = "None";
+            girlfriend = "None";
+            shopType = "Basic";
+            tools = [];
+            day = 1;
+            daysSinceLastPayment = 0;
+            daysSinceLastRentPayment = 0;
+            rentActive = false;
+            girlfriendCost = 0;
+            realName = "";
+            shopName = "";
+            currentDate = new Date('2025-08-10T23:29:00+01:00');
+            difficulty = "Normal";
+            country = "Nigeria";
+            currencySymbol = "₦";
+            currentComment = null;
+            currentEvent = null;
+            if (clockInterval) clearInterval(clockInterval);
+            showMessage('Game reset! Start a new game.', 'form');
+            showFormPage();
+            document.getElementById('real-name').value = '';
+            document.getElementById('shop-name').value = '';
+            document.getElementById('start-date').value = '2025-08-10';
+            document.getElementById('difficulty').value = 'Normal';
+            document.getElementById('country').value = 'Nigeria';
+            updateCurrency();
         }
-      }
 
-      if (reward && reward > 5000) {
-        reviewSnippets[0] = positiveReviews[Math.floor(Math.random() * positiveReviews.length)];
-        fameChange = fameChange || 0.1;
-      }
-
-      return { review: `${critic.name}, ${critic.outlet}: ${reviewSnippets.join(" ")}`, fameChange };
-    }
-
-    async function generateFollowerReaction(isSuccess, isBlockbuster = false) {
-      let followerGain = 0;
-      let fameChange = 0;
-      let reaction = "";
-
-      if (isSuccess) {
-        followerGain = isBlockbuster ? Math.floor(Math.random() * 151) + 50 : Math.floor(Math.random() * 101) + 50;
-        fameChange = 0.25;
-        reaction = isBlockbuster
-          ? `📱 Your fans are buzzing about your blockbuster role! +${followerGain} Followers, +0.25 Fame`
-          : `📱 Your followers loved seeing you in that role! +${followerGain} Followers, +0.25 Fame`;
-      } else {
-        followerGain = Math.floor(Math.random() * 41) + 10;
-        reaction = `📱 Some fans noticed your audition attempt. +${followerGain} Followers`;
-      }
-
-      followers += followerGain;
-      fame += fameChange;
-      await showInfoModal(reaction);
-      fame = Math.floor(fame || 1);
-      updateStats();
-      saveGame();
-    }
-
-    async function startGame() {
-  const fullName = document.getElementById("fullName").value;
-  const stageName = document.getElementById("stageName").value;
-  age = Number(document.getElementById("age").value);
-  const city = document.getElementById("city").value;
-  startDate = document.getElementById("startDate").value;
-  currencySymbol = document.getElementById("currency").value;
-
-  year = 1; // Initialize year for new game
-
-  if (!fullName || !stageName || !age || !city || !startDate) {
-    let retry = await showModal("Please fill in all fields, including the starting date. Retry?");
-    if (retry) return;
-    else return;
-  }
-  if (age < 17) {
-    let retry = await showModal("Minimum age to enter is 17. Retry?");
-    if (retry) return;
-    else return;
-  }
-  if (age > 60) {
-    let retry = await showModal("Maximum age to enter is 60. Retry?");
-    if (retry) return;
-    else return;
-  }
-
-  money = getStartingMoney(currencySymbol);
-
-  document.getElementById("nameDisplay").textContent = `${stageName} (${fullName})`;
-  document.getElementById("cityDisplay").textContent = city;
-  document.getElementById("ageDisplay").textContent = age;
-  document.getElementById("startDateDisplay").textContent = startDate;
-  document.getElementById("currencySymbol").textContent = currencySymbol;
-
-  document.getElementById("profileForm").style.display = "none";
-  document.getElementById("game").style.display = "block";
-  updateStats();
-  updateLifestyleButtons();
-  saveGame();
-}
-
-    async function chooseAction(choice, cost) {
-  if (energy < cost) {
-    await showModal("Not enough energy for this action. Try another action?");
-    return;
-  }
-  if (choice === 1 && money < 1000) {
-    await showModal("Not enough money for an audition. Try another action?");
-    return;
-  }
-  if (choice === 4 && money < 2000) {
-    await showModal("Not enough money to hire a talent agent. Try another action?");
-    return;
-  }
-  if (choice === 6) {
-    if (!actionAvailability.blockbuster) {
-      await showModal("No blockbuster movie roles are available right now. Try another action?");
-      return;
-    }
-    if (actionUses.blockbuster >= MAX_ACTION_USES_PER_YEAR.blockbuster) {
-      await showModal("You've reached the yearly limit for blockbuster movie roles. Try another action?");
-      return;
-    }
-    if (fame < 45) {
-      await showModal("You need at least 45 Fame to be considered for blockbuster movie roles. Try another action?");
-      return;
-    }
-  }
-  energy -= cost;
-  let outcome = "";
-
-  if (choice === 1) {
-    money -= 1000;
-    let chance = Math.random() + (practiceXP * 0.01);
-    if (chance < 0.4) {
-      fame += 1;
-      money += 3000;
-      blockbusters += 1;
-      outcome = `🎉 You got a minor acting role! +${currencySymbol}3000, +1 Fame, +1 Blockbuster`;
-      let { review, fameChange } = generateReview(true, 3000);
-      await showInfoModal(`${review} (${fameChange >= 0 ? '+' : ''}${fameChange} Fame)`);
-      fame = Math.max(fame + fameChange, 1);
-      await generateFollowerReaction(true, true);
-    } else {
-      fame += 0.25;
-      outcome = "😕 You tried but didn’t get selected. +0.25 Fame";
-      await generateFollowerReaction(false);
-    }
-  } else if (choice === 2) {
-    let tiktokOutcome = "";
-    if (Math.random() < 0.2) {
-      const followerGain = 500 + Math.floor(Math.random() * 501);
-      followers += followerGain;
-      fame += 0.5;
-      tiktokOutcome = `📈 Your monologue got some buzz! +${followerGain} Followers, +0.5 Fame`;
-    } else {
-      const followerGain = 5 + Math.floor(Math.random() * 16);
-      followers += followerGain;
-      fame += 0.25;
-      tiktokOutcome = `👻 Your post got a few views. +${followerGain} Followers, +0.25 Fame`;
-    }
-    outcome = tiktokOutcome;
-    if (practiceXP >= 12) {
-      if (Math.random() < 0.1) {
-        const hireReward = 500 + (fame * 25);
-        let accept = await showModal(`🎬 Your TikTok impressed a director! Accept role? (+${currencySymbol}${hireReward}, +0.5 Fame, +1 Blockbuster)`);
-        if (accept) {
-          money += hireReward;
-          fame += 0.5;
-          blockbusters += 1;
-          outcome += `\n🎬 You accepted the director’s role! +${currencySymbol}${hireReward}, +0.5 Fame, +1 Blockbuster`;
-          let { review, fameChange } = generateReview(true, hireReward);
-          await showInfoModal(`${review} (${fameChange >= 0 ? '+' : ''}${fameChange} Fame)`);
-          fame = Math.max(fame + fameChange, 1);
-          await generateFollowerReaction(true, true);
-        } else {
-          outcome += "\n🙅 You declined the director’s offer.";
+        function updateCurrency() {
+            const countrySelect = document.getElementById('country').value;
+            let symbol;
+            switch (countrySelect) {
+                case 'Nigeria':
+                    symbol = '₦';
+                    break;
+                case 'United States':
+                    symbol = '$';
+                    break;
+                case 'United Kingdom':
+                    symbol = '£';
+                    break;
+                case 'Germany':
+                    symbol = '€';
+                    break;
+                case 'Japan':
+                    symbol = '¥';
+                    break;
+                case 'India':
+                    symbol = '₹';
+                    break;
+                case 'South Africa':
+                    symbol = 'R';
+                    break;
+            }
+            document.getElementById('currency').value = symbol;
+            currencySymbol = symbol;
         }
-      } else if (Math.random() < 0.2) {
-        fame += 0.25;
-        outcome += "\n🤝 Your TikTok caught a producer's eye! +0.25 Fame";
-      }
-    }
-  } else if (choice === 3) {
-    fame += 0.5;
-    practiceXP++;
-    outcome = "🎭 Workshop attended. You feel sharper. +0.5 Fame, +1 XP";
-    if (Math.random() < 0.2) {
-      let scriptAccepted = await showModal("📜 You gained inspiration. Accept script? (+1 Script)");
-      if (scriptAccepted) {
-        scripts += 1;
-        outcome += "\n📜 You gained a script! +1 Script";
-      } else {
-        outcome += "\n🙅 You discarded the script idea.";
-      }
-    }
-  } else if (choice === 4) {
-    money -= 2000;
-    hasAgent = true;
-    if (fame >= 10) {
-      let chance = Math.random() + (practiceXP * 0.01);
-      if (chance < 0.6) {
-        fame += 1.5;
-        money += 4000;
-        blockbusters += 1;
-        outcome = `🎬 Your agent landed you a big audition! You got the role! +${currencySymbol}4000, +1.5 Fame, +1 Blockbuster`;
-        let { review, fameChange } = generateReview(true, 4000);
-        await showInfoModal(`${review} (${fameChange >= 0 ? '+' : ''}${fameChange} Fame)`);
-        fame = Math.max(fame + fameChange, 1);
-        await generateFollowerReaction(true, true);
-      } else {
-        fame += 0.5;
-        outcome = "😕 Your agent got you a big audition, but you didn’t get the role. +0.5 Fame";
-        await generateFollowerReaction(false);
-      }
-    } else {
-      fame += 0.25;
-      outcome = "🤝 Your agent couldn’t find big auditions yet. +0.25 Fame";
-    }
-  } else if (choice === 5) {
-    const jobs = ["waiter", "barista", "rideshare driver", "retail worker"];
-    const job = jobs[Math.floor(Math.random() * jobs.length)];
-    const jobReward = Math.floor(Math.random() * 201) + 200;
-    money += jobReward;
-    outcome = `💼 You worked as a ${job}! +${currencySymbol}${jobReward}`;
-  } else if (choice === 6) {
-    actionCooldowns.blockbuster = 26; // 6-month cooldown
-    actionUses.blockbuster++;
-    actionAvailability.blockbuster = false;
-    let chance = Math.random() + (practiceXP * 0.01);
-    if (chance < 0.4) { // Reduced success chance
-      const movieReward = 1000 + (fame * 30); // Reduced reward multiplier
-      money += movieReward;
-      fame += 0.5; // Reduced fame reward
-      blockbusters += 1;
-      outcome = `🎬 You were hired for a blockbuster movie role! +${currencySymbol}${movieReward}, +0.5 Fame, +1 Blockbuster`;
-      let { review, fameChange } = generateReview(true, movieReward);
-      await showInfoModal(`${review} (${fameChange >= 0 ? '+' : ''}${fameChange} Fame)`);
-      fame = Math.max(fame + fameChange, 1);
-      await generateFollowerReaction(true, true);
-    } else {
-      fame += 0.1;
-      outcome = "😕 You auditioned for a blockbuster movie role but weren’t hired. +0.1 Fame";
-      await generateFollowerReaction(false);
-    }
-  }
 
-  await showInfoModal(`🗓️ Week ${week} Action:\n${outcome}`);
-  fame = Math.floor(fame || 1);
-  skill = getSkillByXP(practiceXP);
-  updateStats();
-  updateWeekChoices();
-  updateLifestyleButtons();
-  checkEnergy();
-  saveGame();
-}
-
-    async function practice() {
-      if (energy < 30) {
-        await showModal("You're too tired to practice. Try another action?");
-        return;
-      }
-      energy -= 30;
-      practiceXP++;
-      let outcome = "🧘 You practiced. XP +1. You're improving slowly.";
-      if (Math.random() < 0.1) fame += 0.25;
-      fame = Math.floor(fame || 1);
-      skill = getSkillByXP(practiceXP);
-      await showInfoModal(`🗓️ Week ${week} Action:\n${outcome}`);
-      updateStats();
-      updateLifestyleButtons();
-      checkEnergy();
-      saveGame();
-    }
-
-    async function writeScript() {
-  if (!actionAvailability.writeScript) {
-    await showModal("You're not inspired to write a script right now. Try another action?");
-    return;
-  }
-  if (actionUses.writeScript >= MAX_ACTION_USES_PER_YEAR.writeScript) {
-    await showModal("You've reached the yearly limit for writing scripts. Try another action?");
-    return;
-  }
-  if (energy < 30) {
-    await showModal("Not enough energy to write a script. Try another action?");
-    return;
-  }
-  if (practiceXP < 7) {
-    await showModal("You need at least Improving skill (7 XP) to write a script. Try another action?");
-    return;
-  }
-  energy -= 30;
-  scripts += 1;
-  actionCooldowns.writeScript = 8; // 2-month cooldown
-  actionUses.writeScript++;
-  let qualityChance = Math.min(practiceXP * 0.02, 0.8);
-  let scriptQuality = Math.random() < qualityChance ? "High-Quality" : "Standard";
-  scriptQualities.push(scriptQuality);
-  let outcome = `✍️ You wrote a ${scriptQuality} script! +1 Script`;
-  if (Math.random() < 0.05 && fame >= 20) { // Reduced fame gain chance
-    fame += 0.2;
-    outcome += " +0.2 Fame due to industry buzz!";
-  }
-  await showInfoModal(`🗓️ Week ${week} Action:\n${outcome}`);
-  fame = Math.floor(fame || 1);
-  updateStats();
-  updateWeekChoices();
-  updateLifestyleButtons();
-  checkEnergy();
-  saveGame();
-}
-
-    async function sellScript() {
-  if (energy < 20) {
-    await showModal("Not enough energy to sell a script. Try another action?");
-    return;
-  }
-  if (scripts < 1) {
-    await showModal("You need a script to sell. Try another action?");
-    return;
-  }
-  if (practiceXP < 7) {
-    await showModal("You need at least Improving skill (7 XP) to sell a script. Try another action?");
-    return;
-  }
-  energy -= 20;
-  scripts -= 1;
-  let scriptQuality = scriptQualities.shift() || "Standard"; // Get quality of the sold script
-
-  // Define buyers based on fame
-  const bigBuyers = [
-    { name: "Netflix", type: "Streaming Platform" },
-    { name: "Warner Bros.", type: "Studio" },
-    { name: "Universal Pictures", type: "Studio" },
-    { name: "Lionsgate", type: "Studio" },
-    { name: "A24", type: "Independent Studio" }
-  ];
-  const smallBuyers = [
-    { name: "Jane Doe Productions", type: "Independent Producer" },
-    { name: "Local Theater Group", type: "Community Theater" },
-    { name: "Indie Filmmaker", type: "Independent Filmmaker" },
-    { name: "Student Film Project", type: "Student Production" }
-  ];
-
-  // Determine buyer based on fame
-  let buyerPool = fame >= 30 ? bigBuyers : smallBuyers;
-  const buyer = buyerPool[Math.floor(Math.random() * buyerPool.length)];
-
-  // Calculate script value based on fame, skill, and quality
-  let baseValue;
-  if (fame < 20) {
-    baseValue = 500 + Math.floor(Math.random() * 501); // Very low for low fame
-  } else if (fame < 50) {
-    baseValue = 2000 + Math.floor(Math.random() * 3001); // Moderate for medium fame
-  } else {
-    baseValue = 10000 + Math.floor(Math.random() * 20001); // High for high fame
-  }
-
-  // Adjust value based on script quality and skill
-  let qualityMultiplier = scriptQuality === "High-Quality" ? 1.5 : 1;
-  let skillMultiplier = Math.min(practiceXP * 0.05, 2); // Skill boosts value up to 2x
-  let scriptValue = Math.round(baseValue * qualityMultiplier * skillMultiplier);
-
-  // Reduce chance of high-value sales for low fame
-  let saleChance = Math.min(fame * 0.01 + (scriptQuality === "High-Quality" ? 0.2 : 0), 0.9);
-  if (fame < 50 && Math.random() > saleChance) {
-    scriptValue = Math.round(scriptValue * 0.5); // Halve value for low-fame, low-chance sales
-  }
-
-  const convertedValue = convertCurrency(scriptValue);
-  let accept = await showModal(`💸 ${buyer.name} (${buyer.type}) wants to buy your ${scriptQuality} script for ${currencySymbol}${convertedValue}! Accept?`);
-  let outcome = "";
-  if (accept) {
-    money += convertedValue;
-    if (fame >= 30 && scriptQuality === "High-Quality" && Math.random() < 0.2) {
-      fame += 0.5;
-      outcome = `💸 Sold your ${scriptQuality} script to ${buyer.name} for ${currencySymbol}${convertedValue}! +0.5 Fame due to industry recognition.`;
-      await generateFollowerReaction(true);
-    } else if (Math.random() < 0.1) {
-      fame += 0.25;
-      outcome = `💸 Sold your ${scriptQuality} script to ${buyer.name} for ${currencySymbol}${convertedValue}! +0.25 Fame`;
-    } else {
-      outcome = `💸 Sold your ${scriptQuality} script to ${buyer.name} for ${currencySymbol}${convertedValue}!`;
-    }
-  } else {
-    outcome = `🙅 You declined to sell your ${scriptQuality} script to ${buyer.name}.`;
-  }
-
-  await showInfoModal(`🗓️ Week ${week} Action:\n${outcome}`);
-  fame = Math.floor(fame || 1);
-  updateStats();
-  updateLifestyleButtons();
-  checkEnergy();
-  saveGame();
-}
-
-    async function attendAListParty() {
-  if (!actionAvailability.aListParty) {
-    await showModal("No A-List party invitations are available right now. Try another action?");
-    return;
-  }
-  if (actionUses.aListParty >= MAX_ACTION_USES_PER_YEAR.aListParty) {
-    await showModal("You've reached the yearly limit for attending A-List parties. Try another action?");
-    return;
-  }
-  if (energy < 25) {
-    await showModal("Not enough energy to attend an A-List party. Try another action?");
-    return;
-  }
-  if (money < 2500) {
-    await showModal(`Not enough money to attend an A-List party (${currencySymbol}2,500 required). Try another action?`);
-    return;
-  }
-  if (fame < 20) {
-    await showModal("You need at least 20 Fame to attend an A-List party. Try another action?");
-    return;
-  }
-  energy -= 25;
-  money -= 2500;
-  actionCooldowns.aListParty = 8; // 2-month cooldown
-  actionUses.aListParty++;
-  actionAvailability.aListParty = false;
-  let outcome = "";
-  let chance = Math.random();
-  if (chance < 0.25) { // Slightly reduced success chance
-    const partyReward = Math.floor(Math.random() * 3001) + 3000; // Lower reward
-    let accept = await showModal(`🎉 You networked at the A-List party and landed a movie role! Accept? (+${currencySymbol}${partyReward}, +1.5 Fame, +1 Blockbuster)`);
-    if (accept) {
-      fame += 1.5; // Reduced fame reward
-      blockbusters += 1;
-      money += partyReward;
-      outcome = `🎉 You accepted the movie role! +${currencySymbol}${partyReward}, +1.5 Fame, +1 Blockbuster`;
-      let { review, fameChange } = generateReview(true, partyReward);
-      await showInfoModal(`${review} (${fameChange >= 0 ? '+' : ''}${fameChange} Fame)`);
-      fame = Math.max(fame + fameChange, 1);
-      await generateFollowerReaction(true, true);
-    } else {
-      outcome = "🙅 You declined the movie role.";
-    }
-  } else if (chance < 0.5) {
-    fame = Math.max(fame - 0.5, 1); // Reduced fame penalty
-    outcome = `😳 A scandal at the A-List party hurt your reputation! -0.5 Fame`;
-  } else {
-    fame += 0.2; // Reduced fame gain
-    outcome = `🥂 You mingled at the A-List party and made some connections. +0.2 Fame`;
-  }
-  await showInfoModal(`🗓️ Week ${week} Action:\n${outcome}`);
-  fame = Math.floor(fame || 1);
-  updateStats();
-  updateWeekChoices();
-  updateLifestyleButtons();
-  checkEnergy();
-  saveGame();
-}
-
-    async function voiceActVideoGame() {
-  if (!actionAvailability.voiceAct) {
-    await showModal("No voice acting roles are available right now. Try another action?");
-    return;
-  }
-  if (actionUses.voiceAct >= MAX_ACTION_USES_PER_YEAR.voiceAct) {
-    await showModal("You've reached the yearly limit for voice acting roles. Try another action?");
-    return;
-  }
-  if (energy < 30) {
-    await showModal("Not enough energy to voice act in a video game. Try another action?");
-    return;
-  }
-  if (fame < 15) {
-    await showModal("You need at least 15 Fame to voice act in a video game. Try another action?");
-    return;
-  }
-  energy -= 30;
-  actionCooldowns.voiceAct = 12; // 3-month cooldown
-  actionUses.voiceAct++;
-  actionAvailability.voiceAct = false;
-  let outcome = "";
-  let chance = Math.random() + (practiceXP * 0.01);
-  if (chance < 0.5) { // Reduced success chance
-    const followerGain = Math.floor(Math.random() * 101) + 50; // Reduced follower gain
-    fame += 0.75; // Reduced fame reward
-    followers += followerGain;
-    voiceActingIncome = 400; // Reduced income
-    voiceActingWeeks = 8; // Reduced duration
-    outcome = `🎮 Your video game voice acting role was a hit! +${followerGain} Followers, +0.75 Fame, +${currencySymbol}400/week for 8 weeks`;
-    await generateFollowerReaction(true);
-  } else {
-    fame += 0.2; // Reduced fame gain
-    outcome = `😕 Your video game voice acting role didn’t stand out, but you gained some exposure. +0.2 Fame`;
-    await generateFollowerReaction(false);
-  }
-  await showInfoModal(`🗓️ Week ${week} Action:\n${outcome}`);
-  fame = Math.floor(fame || 1);
-  updateStats();
-  updateWeekChoices();
-  updateLifestyleButtons();
-  checkEnergy();
-  saveGame();
-}
-
-    async function doBrandEndorsement() {
-  if (!actionAvailability.endorsement) {
-    await showModal("No brand endorsement offers are available right now. Try another action?");
-    return;
-  }
-  if (actionUses.endorsement >= MAX_ACTION_USES_PER_YEAR.endorsement) {
-    await showModal("You've reached the yearly limit for brand endorsements. Try another action?");
-    return;
-  }
-  if (energy < 20) {
-    await showModal("Not enough energy to do a brand endorsement deal. Try another action?");
-    return;
-  }
-  if (money < 1000) {
-    await showModal(`Not enough money for a brand endorsement deal (${currencySymbol}1,000 required). Try another action?`);
-    return;
-  }
-  if (fame < 30) {
-    await showModal("You need at least 30 Fame to do a brand endorsement deal. Try another action?");
-    return;
-  }
-  energy -= 20;
-  money -= 1000;
-  actionCooldowns.endorsement = 8; // 2-month cooldown
-  actionUses.endorsement++;
-  actionAvailability.endorsement = false;
-  let outcome = "";
-  let chance = Math.random() + (practiceXP * 0.01);
-  if (chance < 0.6) { // Reduced success chance
-    const endorsementReward = Math.floor(Math.random() * 7001) + 5000; // Reduced reward
-    const followerGain = Math.floor(Math.random() * 151) + 50; // Reduced follower gain
-    fame += 0.4; // Reduced fame reward
-    followers += followerGain;
-    money += endorsementReward;
-    outcome = `📺 Your brand endorsement deal was a success! +${currencySymbol}${endorsementReward}, +${followerGain} Followers, +0.4 Fame`;
-  } else {
-    fame += 0.2; // Reduced fame gain
-    outcome = `😕 The brand endorsement deal didn’t resonate, but you gained some exposure. +0.2 Fame`;
-  }
-  await showInfoModal(`🗓️ Week ${week} Action:\n${outcome}`);
-  fame = Math.floor(fame || 1);
-  updateStats();
-  updateWeekChoices();
-  updateLifestyleButtons();
-  checkEnergy();
-  saveGame();
-}
-
-    async function attendNetworkingEvent() {
-  if (!actionAvailability.networking) {
-    await showModal("No industry networking events are available right now. Try another action?");
-    return;
-  }
-  if (actionUses.networking >= MAX_ACTION_USES_PER_YEAR.networking) {
-    await showModal("You've reached the yearly limit for networking events. Try another action?");
-    return;
-  }
-  if (energy < 25) {
-    await showModal("Not enough energy to attend an industry networking event. Try another action?");
-    return;
-  }
-  if (money < 2000) {
-    await showModal(`Not enough money to attend an industry networking event (${currencySymbol}2,000 required). Try another action?`);
-    return;
-  }
-  if (fame < 25) {
-    await showModal("You need at least 25 Fame to attend an industry networking event. Try another action?");
-    return;
-  }
-  if (practiceXP < 20) {
-    await showModal("You need at least Pro skill (20 XP) to attend an industry networking event. Try another action?");
-    return;
-  }
-  energy -= 25;
-  money -= 2000;
-  actionCooldowns.networking = 8; // 2-month cooldown
-  actionUses.networking++;
-  actionAvailability.networking = false;
-  let outcome = "";
-  let chance = Math.random();
-  if (chance < 0.2) { // Reduced success chance
-    const producerReward = Math.floor(Math.random() * 4001) + 4000; // Reduced reward
-    let accept = await showModal(`🤝 You met a top producer at the networking event and landed a big role! Accept? (+${currencySymbol}${producerReward}, +1.5 Fame, +1 Blockbuster)`);
-    if (accept) {
-      fame += 1.5; // Reduced fame reward
-      blockbusters += 1;
-      money += producerReward;
-      outcome = `🤝 You accepted the big role! +${currencySymbol}${producerReward}, +1.5 Fame, +1 Blockbuster`;
-      let { review, fameChange } = generateReview(true, producerReward);
-      await showInfoModal(`${review} (${fameChange >= 0 ? '+' : ''}${fameChange} Fame)`);
-      fame = Math.max(fame + fameChange, 1);
-      await generateFollowerReaction(true, true);
-    } else {
-      outcome = "🙅 You declined the big role.";
-    }
-  } else if (chance < 0.5) { // Adjusted probability
-    const callbackReward = Math.floor(Math.random() * 2001) + 1500; // Reduced reward
-    let isBlockbuster = Math.random() < 0.4; // Reduced blockbuster chance
-    let accept = await showModal(`🎬 You got a callback for a supporting role at the networking event! Accept? (+${currencySymbol}${callbackReward}, +0.75 Fame${isBlockbuster ? ", +1 Blockbuster" : ""})`);
-    if (accept) {
-      fame += 0.75; // Reduced fame reward
-      money += callbackReward;
-      if (isBlockbuster) blockbusters += 1;
-      outcome = `🎬 You accepted the supporting role! +${currencySymbol}${callbackReward}, +0.75 Fame${isBlockbuster ? ", +1 Blockbuster" : ""}`;
-      let { review, fameChange } = generateReview(true, callbackReward);
-      await showInfoModal(`${review} (${fameChange >= 0 ? '+' : ''}${fameChange} Fame)`);
-      fame = Math.max(fame + fameChange, 1);
-      await generateFollowerReaction(true, isBlockbuster);
-    } else {
-      outcome = "🙅 You declined the supporting role.";
-    }
-  } else {
-    fame += 0.2; // Reduced fame gain
-    outcome = `🤝 You made some connections at the networking event. +0.2 Fame`;
-  }
-  await showInfoModal(`🗓️ Week ${week} Action:\n${outcome}`);
-  fame = Math.floor(fame || 1);
-  updateStats();
-  updateWeekChoices();
-  updateLifestyleButtons();
-  checkEnergy();
-  saveGame();
-}
-
-    async function launchMerchLine() {
-  if (!actionAvailability.merchLine) {
-    await showModal("Your brand isn’t trending enough to launch a merchandise line right now. Try another action?");
-    return;
-  }
-  if (actionUses.merchLine >= MAX_ACTION_USES_PER_YEAR.merchLine) {
-    await showModal("You've reached the yearly limit for launching merchandise lines. Try another action?");
-    return;
-  }
-  if (energy < 40) {
-    await showModal("Not enough energy to launch a merchandise line. Try another action?");
-    return;
-  }
-  if (money < 15000) {
-    await showModal(`Not enough money to launch a merchandise line (${currencySymbol}15,000 required). Try another action?`);
-    return;
-  }
-  if (fame < 35) {
-    await showModal("You need at least 35 Fame to launch a merchandise line. Try another action?");
-    return;
-  }
-  if (followers < 500) {
-    await showModal("You need at least 500 Followers to launch a merchandise line. Try another action?");
-    return;
-  }
-  energy -= 40;
-  money -= 15000;
-  actionCooldowns.merchLine = 26; // 6-month cooldown
-  actionUses.merchLine++;
-  actionAvailability.merchLine = false;
-  merchFailed = false; // Reset failure state
-  let outcome = "";
-  let chance = Math.random() + (fame * 0.005);
-  if (chance < 0.5) {
-    const followerGain = Math.floor(Math.random() * 201) + 50;
-    fame += 0.75;
-    followers += followerGain;
-    merchIncome = convertCurrency(800 + Math.floor(fame * 10)); // Income scales with fame
-    merchWeeks = Infinity; // Indefinite income
-    outcome = `🛍️ Your merchandise line was a hit! +${followerGain} Followers, +0.75 Fame, +${currencySymbol}${merchIncome}/week indefinitely`;
-    await generateFollowerReaction(true);
-  } else {
-    fame += 0.2;
-    outcome = `😕 Your merchandise line didn’t sell well, but you gained some exposure. +0.2 Fame`;
-  }
-  await showInfoModal(`🗓️ Week ${week} Action:\n${outcome}`);
-  fame = Math.floor(fame || 1);
-  updateStats();
-  updateWeekChoices();
-  updateLifestyleButtons();
-  checkEnergy();
-  saveGame();
-}
-
-async function getMarried() {
-  if (isMarried) {
-    await showInfoModal("You are already married!");
-    return;
-  }
-  if (age < 20) {
-    await showInfoModal("You must be at least 20 years old to get married. Try another action?");
-    return;
-  }
-  if (money < 10000) {
-    await showInfoModal(`Not enough money to get married (${currencySymbol}10,000 required). Try another action?`);
-    return;
-  }
-  if (fame < 20) {
-    await showInfoModal("You need at least 20 Fame to attract a partner for marriage. Try another action?");
-    return;
-  }
-  if (energy < 30) {
-    await showInfoModal("Not enough energy to get married. Try another action?");
-    return;
-  }
-
-  const spouseNames = [
-    "Emma Watson", "Sofia Vergara", "Zendaya Coleman", "Priyanka Chopra", "Margot Robbie",
-    "Gal Gadot", "Scarlett Johansson", "Natalie Portman", "Jennifer Lawrence", "Deepika Padukone"
-  ];
-  spouseName = spouseNames[Math.floor(Math.random() * spouseNames.length)];
-  isMarried = true;
-  money -= convertCurrency(10000);
-  fame += 0.5;
-  followers += 100;
-  energy -= 30;
-
-  const outcome = `💍 Congratulations! You married ${spouseName}! +0.5 Fame, +100 Followers`;
-  await showInfoModal(`🗓️ Week ${week} Action:\n${outcome}`);
-  fame = Math.floor(fame || 1);
-  updateStats();
-  updateLifestyleButtons();
-  checkEnergy();
-  saveGame();
-}
-
-    async function nextWeek() {
-  week++;
-
-  // Reset action uses annually
-  if (week > 52) {
-    week = 1;
-    year += 1; // Increment year
-    age += 1;
-    actionUses = {
-      writeScript: 0,
-      blockbuster: 0,
-      aListParty: 0,
-      voiceAct: 0,
-      endorsement: 0,
-      networking: 0,
-      merchLine: 0
-    };
-    await showInfoModal(`🎉 Happy New Year! You are now ${age} years old, starting Year ${year}.`);
-  }
-
-  if (age >= 70) {
-    await showInfoModal("🎭 You've reached age 70. It's time to retire from your acting career. Thank you for an incredible journey!");
-    resetGame();
-    return;
-  }
-
-  hasAgent = false;
-  energy = 100;
-  document.getElementById("weekNum").textContent = week;
-  document.getElementById("log").innerHTML = "";
-
-  // Decrement cooldowns
-  for (let action in actionCooldowns) {
-    if (actionCooldowns[action] > 0) {
-      actionCooldowns[action]--;
-    }
-  }
-
-  // Update action availability based on fame and random chance
-  actionAvailability.writeScript = actionCooldowns.writeScript === 0 && actionUses.writeScript < MAX_ACTION_USES_PER_YEAR.writeScript && practiceXP >= 7;
-  actionAvailability.blockbuster = actionCooldowns.blockbuster === 0 && actionUses.blockbuster < MAX_ACTION_USES_PER_YEAR.blockbuster && fame >= 45 && Math.random() < 0.2;
-  actionAvailability.aListParty = actionCooldowns.aListParty === 0 && actionUses.aListParty < MAX_ACTION_USES_PER_YEAR.aListParty && fame >= 20 && Math.random() < 0.3;
-  actionAvailability.voiceAct = actionCooldowns.voiceAct === 0 && actionUses.voiceAct < MAX_ACTION_USES_PER_YEAR.voiceAct && fame >= 15 && Math.random() < 0.35;
-  actionAvailability.endorsement = actionCooldowns.endorsement === 0 && actionUses.endorsement < MAX_ACTION_USES_PER_YEAR.endorsement && fame >= 30 && Math.random() < 0.3;
-  actionAvailability.networking = actionCooldowns.networking === 0 && actionUses.networking < MAX_ACTION_USES_PER_YEAR.networking && fame >= 25 && practiceXP >= 20 && Math.random() < 0.3;
-  actionAvailability.merchLine = actionCooldowns.merchLine === 0 && actionUses.merchLine < MAX_ACTION_USES_PER_YEAR.merchLine && fame >= 35 && followers >= 500 && Math.random() < 0.25;
-
-  if (isMarried && Math.random() < 0.05) {
-    const divorceAmount = Math.floor(money / 2);
-    money -= divorceAmount;
-    fame = Math.max(fame - 0.5, 1);
-    await showInfoModal(`💔 ${spouseName} has filed for divorce and taken ${currencySymbol}${formatMoney(divorceAmount)} of your assets! -0.5 Fame`);
-    isMarried = false;
-    spouseName = "";
-    updateStats();
-    updateLifestyleButtons();
-  }
-
-  if (voiceActingWeeks > 0) {
-    money += voiceActingIncome;
-    voiceActingWeeks--;
-    await showInfoModal(`💸 Received ${currencySymbol}${voiceActingIncome} from video game voice acting. ${voiceActingWeeks} weeks remaining.`);
-    updateStats();
-  }
-
-  if (merchWeeks > 0 && !merchFailed) {
-  money += merchIncome;
-  if (Math.random() < 0.02) { // 2% chance of merch failure
-    merchFailed = true;
-    merchIncome = 0;
-    merchWeeks = 0;
-    await showInfoModal(`😕 Your merchandise line crashed due to market trends or a scandal! Income stopped.`);
-  } else {
-    await showInfoModal(`💸 Received ${currencySymbol}${merchIncome} from merchandise sales.`);
-  }
-  updateStats();
-}
-
-  if (tiktokMonetizationWeeks > 0) {
-    money += tiktokIncome;
-    tiktokMonetizationWeeks--;
-    await showInfoModal(`💸 Received ${currencySymbol}${tiktokIncome} from TikTok Creator Fund. ${tiktokMonetizationWeeks} weeks remaining.`);
-    updateStats();
-  }
-
-  const awardCycle = Math.floor(Math.random() * 3) + 10;
-  if (week % awardCycle === 0) {
-    await checkAwardShows();
-  }
-
-  let offerChance = Math.min(0.05 + ((fame || 1) / 100) * 0.2, 0.3);
-  if (Math.random() < offerChance && fame >= 45) {
-    let movieReward = 2000 + ((fame || 1) * 100);
-    let accept = await showModal(`🎥 You've been offered a blockbuster movie role! Accept? (+${currencySymbol}${movieReward}, +1 Fame, +1 Blockbuster, -50⚡)`);
-    if (accept && energy >= 50) {
-      energy -= 50;
-      money += movieReward;
-      fame += 1;
-      blockbusters += 1;
-      actionCooldowns.blockbuster = 26; // 6-month cooldown for blockbuster
-      actionUses.blockbuster++;
-      actionAvailability.blockbuster = false;
-      let { review, fameChange } = generateReview(true, movieReward);
-      await showInfoModal(`${review} (${fameChange >= 0 ? '+' : ''}${fameChange} Fame)`);
-      fame = Math.max(fame + fameChange, 1);
-      await showInfoModal(`🎬 You starred in a blockbuster movie! Earned ${currencySymbol}${movieReward}, +1 Fame, +1 Blockbuster.`);
-      await generateFollowerReaction(true, true);
-      fame = Math.floor(fame || 1);
-      updateStats();
-    } else if (accept && energy < 50) {
-      await showModal("😕 Not enough energy to take the blockbuster movie role. Try another action?");
-    } else {
-      await showInfoModal("🙅 You declined the blockbuster movie role offer.");
-    }
-  }
-
-  enableButtons();
-  updateStats();
-  updateLifestyleButtons();
-  checkEnergy();
-  saveGame();
-}
-
-    async function checkAwardShows() {
-  const awards = [
-    { name: "AMVCA", fameMin: 15, blockbustersMin: 2, fameRewardWin: 2, moneyRewardWin: 5000, fameRewardNom: 0.5 },
-    { name: "NEA", fameMin: 15, blockbustersMin: 2, fameRewardWin: 2, moneyRewardWin: 5000, fameRewardNom: 0.5 },
-    { name: "BON Awards", fameMin: 15, blockbustersMin: 2, fameRewardWin: 2, moneyRewardWin: 5000, fameRewardNom: 0.5 },
-    { name: "AMAA", fameMin: 30, blockbustersMin: 4, fameRewardWin: 3, moneyRewardWin: 10000, fameRewardNom: 0.75 },
-    { name: "TIFF", fameMin: 40, blockbustersMin: 5, fameRewardWin: 4, moneyRewardWin: 20000, fameRewardNom: 1 },
-    { name: "Emmys", fameMin: 50, blockbustersMin: 6, fameRewardWin: 5, moneyRewardWin: 50000, fameRewardNom: 1.5 },
-    { name: "Oscars", fameMin: 60, blockbustersMin: 8, fameRewardWin: 6, moneyRewardWin: 75000, fameRewardNom: 2 }
-  ];
-
-  let eligibleAwards = awards.filter(award => fame >= award.fameMin && blockbusters >= award.blockbustersMin);
-  if (eligibleAwards.length === 0) {
-    if (fame >= 50) {
-      await showInfoModal("😕 Your fame is high, but you need more blockbuster roles to be invited to award shows.");
-      fame = Math.max(fame - 0.5, 1);
-    }
-    return;
-  }
-
-  const award = eligibleAwards[Math.floor(Math.random() * eligibleAwards.length)];
-  let invited = await showModal(`🎉 You've been invited to the ${award.name}! Attend?`);
-  if (!invited) {
-    await showInfoModal("🙅 You skipped the award show.");
-    return;
-  }
-
-  let nomChance = Math.min((fame - award.fameMin) * 0.02 + blockbusters * 0.05, 0.7);
-  if (Math.random() < nomChance) {
-    let nominated = await showModal(`🏆 You're nominated for Best Actor at the ${award.name}! Accept nomination?`);
-    if (nominated) {
-      // Generate 3-5 competing nominees
-      const numCompetitors = Math.floor(Math.random() * 3) + 3;
-      const competitors = Array.from({ length: numCompetitors }, () => ({
-        name: ["Chris Hemsworth", "Viola Davis", "Leonardo DiCaprio", "Lupita Nyong'o", "Ryan Gosling", "Ayo Edebiri", "Tom Hanks", "Angela Bassett"][Math.floor(Math.random() * 8)],
-        fame: Math.floor(award.fameMin + Math.random() * (award.fameMin * 0.5))
-      }));
-      competitors.push({ name: document.getElementById("nameDisplay").textContent.split(" (")[0], fame: fame });
-
-      // Calculate win probability based on relative fame and skill
-      const totalFame = competitors.reduce((sum, c) => sum + c.fame, 0);
-      let winChance = Math.min((fame + practiceXP * 0.5) / (totalFame + practiceXP * 0.5) * 0.6, 0.5);
-      const winner = Math.random() < winChance ? competitors[competitors.length - 1] : competitors[Math.floor(Math.random() * (competitors.length - 1))];
-
-      if (winner.name === competitors[competitors.length - 1].name) {
-        let won = await showModal(`🎉 You won Best Actor at the ${award.name}! Accept? (+${award.fameRewardWin} Fame, +${currencySymbol}${award.moneyRewardWin})`);
-        if (won) {
-          fame += award.fameRewardWin;
-          money += award.moneyRewardWin;
-          await showInfoModal(`🎉 You won Best Actor at the ${award.name}! +${award.fameRewardWin} Fame, +${currencySymbol}${award.moneyRewardWin}`);
-          await generateFollowerReaction(true, true);
-        } else {
-          fame += 0.25;
-          await showInfoModal(`🙅 You declined the award. +0.25 Fame`);
+        function startClock() {
+            if (clockInterval) clearInterval(clockInterval);
+            clockInterval = setInterval(() => {
+                if (currentComment !== null || currentEvent !== null) return;
+                const hours = currentDate.getHours();
+                if (hours >= 22) {
+                    clearInterval(clockInterval);
+                    showMessage("It's 10:00 PM or later! Time to rest or go home. Click 'Next Day' to continue.");
+                    document.getElementById('cut-hair-btn').disabled = true;
+                    return;
+                }
+                currentDate = new Date(currentDate.getTime() + 60 * 1000);
+                updateStatus();
+            }, 1000);
         }
-      } else {
-        fame += award.fameRewardNom;
-        await showInfoModal(`😕 You didn't win at the ${award.name}. ${winner.name} (Fame: ${winner.fame}) won Best Actor. Nomination boosts your fame! +${award.fameRewardNom} Fame`);
-        await generateFollowerReaction(true);
-      }
-    } else {
-      await showInfoModal(`🙅 You declined the nomination.`);
-    }
-  } else {
-    await showInfoModal(`😕 You attended the ${award.name} but weren't nominated this time.`);
-  }
-  fame = Math.floor(fame || 1);
-  updateStats();
-  updateWeekChoices();
-  updateLifestyleButtons();
-  saveGame();
-}
 
-    function updateStats() {
-  document.getElementById("money").textContent = formatMoney(money || getStartingMoney(currencySymbol));
-  document.getElementById("fame").textContent = fame || 1;
-  document.getElementById("followers").textContent = followers || 10;
-  document.getElementById("skill").textContent = skill || "Beginner";
-  document.getElementById("energy").textContent = energy || 100;
-  document.getElementById("currencySymbol").textContent = currencySymbol || "$";
-  document.getElementById("blockbusters").textContent = blockbusters || 0;
-  document.getElementById("scripts").textContent = scripts || 0;
-  document.getElementById("ageDisplay").textContent = age || 17;
-  document.getElementById("weekNum").textContent = `Year ${year || 1}, Week ${week || 1}`; // Updated to display year and week
+        function updateStatus() {
+            document.getElementById('money').textContent = currencySymbol + money.toFixed(2);
+            document.getElementById('energy').textContent = energy;
+            document.getElementById('reputation').textContent = reputation.toFixed(1);
+            document.getElementById('customers').textContent = customersBarbered;
+            document.getElementById('housing').textContent = housing;
+            document.getElementById('car').textContent = car;
+            document.getElementById('girlfriend').textContent = girlfriend;
+            document.getElementById('shop-type').textContent = shopType;
+            document.getElementById('tools').textContent = tools.length ? tools.join(', ') : 'None';
+            document.getElementById('day').textContent = day;
+            document.getElementById('difficulty-display').textContent = difficulty;
+            document.getElementById('shop-money').textContent = currencySymbol + money.toFixed(2);
+            document.getElementById('shop-reputation').textContent = reputation.toFixed(1);
+            document.getElementById('shop-housing').textContent = housing;
+            document.getElementById('shop-car').textContent = car;
+            document.getElementById('shop-girlfriend').textContent = girlfriend;
+            document.getElementById('shop-shop-type').textContent = shopType;
+            document.getElementById('shop-tools').textContent = tools.length ? tools.join(', ') : 'None';
+            document.getElementById('leaderboard-money').textContent = currencySymbol + money.toFixed(2);
+            document.getElementById('leaderboard-reputation').textContent = reputation.toFixed(1);
+            document.getElementById('message').textContent = '';
+            document.getElementById('shop-message').textContent = '';
+            document.getElementById('leaderboard-message').textContent = '';
+            document.getElementById('game-title').textContent = shopName || 'Barbing Simulator Game';
+            updateDateTime();
+            updateLeaderboard();
+            updateGameButtons();
+            checkTimeForRest();
+        }
 
-  const marriageStatus = document.getElementById("marriageStatus");
-  if (marriageStatus) {
-    marriageStatus.textContent = isMarried ? `💍 Married to ${spouseName}` : "💍 Single";
-  }
+        function updateGameButtons() {
+            const modifiers = getDifficultyModifiers();
+            document.getElementById('cut-hair-btn').textContent = `Cut Hair (${currencySymbol}${modifiers.haircutEarnings.toFixed(2)}, -${modifiers.energyCost.toFixed(1)} Energy)`;
+            document.getElementById('buy-food-btn').textContent = `Buy Food (${currencySymbol}5, +20 Energy)`;
+            document.getElementById('rent-house-btn').textContent = `Rent House (${currencySymbol}50/month)`;
+        }
 
-  if (!isTikTokMonetized && followers >= 10000) {
-    isTikTokMonetized = true;
-    tiktokIncome = convertCurrency(Math.min(50 + Math.floor((followers - 10000) * 0.01), 500));
-    tiktokMonetizationWeeks = 12;
-    showInfoModal(`🎉 Your TikTok account is now monetized through the Creator Fund! You'll earn ${currencySymbol}${tiktokIncome}/week for ${tiktokMonetizationWeeks} weeks.`);
-  } else if (isTikTokMonetized && tiktokMonetizationWeeks === 0 && followers >= 10000) {
-    tiktokIncome = convertCurrency(Math.min(50 + Math.floor((followers - 10000) * 0.01), 500));
-    tiktokMonetizationWeeks = 12;
-    showInfoModal(`📱 Your TikTok Creator Fund monetization has been renewed! You'll earn ${currencySymbol}${tiktokIncome}/week for ${tiktokMonetizationWeeks} weeks.`);
-  } else if (isTikTokMonetized && followers < 10000) {
-    isTikTokMonetized = false;
-    tiktokIncome = 0;
-    tiktokMonetizationWeeks = 0;
-    showInfoModal(`😕 Your TikTok account is no longer monetized due to low followers. Reach 10,000 followers to monetize again.`);
-  }
+        function updateDateTime() {
+            const options = {
+                timeZone: 'Africa/Lagos',
+                hour: '2-digit',
+                minute: '2-digit',
+                hour12: true,
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            };
+            document.getElementById('datetime').textContent = currentDate.toLocaleString('en-US', options);
+        }
 
-  updateWeekChoices(); // Update action buttons
-}
+        function checkTimeForRest() {
+            const hours = currentDate.getHours();
+            const isAfter10PM = hours >= 22;
+            const cutHairBtn = document.getElementById('cut-hair-btn');
+            cutHairBtn.disabled = isAfter10PM || currentComment !== null || currentEvent !== null;
+            if (isAfter10PM) {
+                showMessage("It's 10:00 PM or later! Time to rest or go home. Click 'Next Day' to continue.");
+            }
+        }
 
-    function checkEnergy() {
-  const minActionEnergy = 15;
-  if (energy < minActionEnergy) {
-    document.querySelectorAll(".choice-btn:not([onclick^='buyLifestyleItem'])").forEach(btn => btn.disabled = true);
-  } else {
-    enableButtons();
-  }
-  updateWeekChoices(); // Update action buttons
-  updateLifestyleButtons();
-}
+        function showMessage(msg, page = 'game') {
+            document.getElementById(page === 'game' ? 'message' : page === 'shop' ? 'shop-message' : page === 'form' ? 'form-message' : 'leaderboard-message').textContent = msg;
+        }
 
-    function disableButtons() {
-      document.querySelectorAll(".choice-btn:not([onclick^='buyLifestyleItem'])").forEach(btn => btn.disabled = true);
-    }
+        function showFormPage() {
+            document.getElementById('form-page').style.display = 'block';
+            document.getElementById('game-page').style.display = 'none';
+            document.getElementById('shop-page').style.display = 'none';
+            document.getElementById('leaderboard-page').style.display = 'none';
+            document.getElementById('comment-modal').style.display = 'none';
+            document.getElementById('event-modal').style.display = 'none';
+            document.getElementById('no-customer-modal').style.display = 'none';
+            document.getElementById('loading-modal').style.display = 'none';
+            if (clockInterval) clearInterval(clockInterval);
+        }
 
-    function enableButtons() {
-  document.querySelectorAll(".choice-btn:not([onclick^='buyLifestyleItem'])").forEach(btn => {
-    // Only enable buttons for actions that don't have specific availability checks
-    if (!["writeScriptBtn", "blockbusterBtn", "aListPartyBtn", "voiceActBtn", "endorsementBtn", "networkingBtn", "merchLineBtn"].includes(btn.id)) {
-      btn.disabled = false;
-    }
-  });
-  updateWeekChoices(); // Handle specific action buttons
-}
+        function showGamePage() {
+            document.getElementById('form-page').style.display = 'none';
+            document.getElementById('game-page').style.display = 'block';
+            document.getElementById('shop-page').style.display = 'none';
+            document.getElementById('leaderboard-page').style.display = 'none';
+            document.getElementById('comment-modal').style.display = currentComment ? 'flex' : 'none';
+            document.getElementById('event-modal').style.display = currentEvent ? 'flex' : 'none';
+            document.getElementById('no-customer-modal').style.display = 'none';
+            document.getElementById('loading-modal').style.display = 'none';
+            startClock();
+            updateStatus();
+        }
 
-    function resetGame() {
-      localStorage.removeItem("actorSimSave");
-      location.reload();
-    }
-    
-window.onload = () => {
-  if (localStorage.getItem("actorSimSave")) {
-    if (loadGame()) {
-      document.getElementById("game").style.display = "block";
-      document.getElementById("profileForm").style.display = "none";
-    } else {
-      document.getElementById("profileForm").style.display = "block";
-      document.getElementById("game").style.display = "none";
-      money = getStartingMoney(currencySymbol);
-      console.log("Starting new game due to load failure.");
-    }
-  } else {
-    document.getElementById("profileForm").style.display = "block";
-    document.getElementById("game").style.display = "none";
-    money = getStartingMoney(currencySymbol);
-    console.log("Starting new game.");
-  }
-};
-    
-  </script>
+        function showShopPage() {
+            document.getElementById('form-page').style.display = 'none';
+            document.getElementById('game-page').style.display = 'none';
+            document.getElementById('shop-page').style.display = 'block';
+            document.getElementById('leaderboard-page').style.display = 'none';
+            document.getElementById('comment-modal').style.display = 'none';
+            document.getElementById('event-modal').style.display = 'none';
+            document.getElementById('no-customer-modal').style.display = 'none';
+            document.getElementById('loading-modal').style.display = 'none';
+            if (clockInterval) clearInterval(clockInterval);
+            updateStatus();
+        }
+
+        function showLeaderboardPage() {
+            document.getElementById('form-page').style.display = 'none';
+            document.getElementById('game-page').style.display = 'none';
+            document.getElementById('shop-page').style.display = 'none';
+            document.getElementById('leaderboard-page').style.display = 'block';
+            document.getElementById('comment-modal').style.display = 'none';
+            document.getElementById('event-modal').style.display = 'none';
+            document.getElementById('no-customer-modal').style.display = 'none';
+            document.getElementById('loading-modal').style.display = 'none';
+            if (clockInterval) clearInterval(clockInterval);
+            updateLeaderboard();
+            updateStatus();
+        }
+
+        function showCommentModal(comment) {
+            currentComment = comment;
+            document.getElementById('comment-text').textContent = comment.text;
+            document.getElementById('response-1').textContent = comment.responses[0].reply;
+            document.getElementById('response-2').textContent = comment.responses[1].reply;
+            document.getElementById('comment-modal').style.display = 'flex';
+            document.getElementById('cut-hair-btn').disabled = true;
+        }
+
+        function handleCommentResponse(index) {
+            if (currentComment) {
+                const selectedResponse = currentComment.responses[index];
+                reputation = Math.max(0, Math.min(100, reputation + selectedResponse.repChange));
+                showMessage(`You replied: "${selectedResponse.reply}" Customer responds: ${selectedResponse.emoji}`);
+                document.getElementById('comment-modal').style.display = 'none';
+                currentComment = null;
+                updateStatus();
+                saveGame();
+            }
+        }
+
+        function showLoadingModal(callback) {
+            document.getElementById('loading-modal').style.display = 'flex';
+            const loadingBar = document.querySelector('.loading-bar');
+            loadingBar.style.width = '0';
+            setTimeout(() => {
+                document.getElementById('loading-modal').style.display = 'none';
+                callback();
+            }, 2000);
+        }
+
+        function startGame() {
+            const realNameInput = document.getElementById('real-name').value.trim();
+            const shopNameInput = document.getElementById('shop-name').value.trim();
+            const startDateInput = document.getElementById('start-date').value;
+            const difficultyInput = document.getElementById('difficulty').value;
+            country = document.getElementById('country').value;
+            updateCurrency();
+            if (realNameInput === "" || shopNameInput === "" || startDateInput === "") {
+                showMessage('Please fill in your real name, shop name, and starting date!', 'form');
+                return;
+            }
+            realName = realNameInput;
+            shopName = `${shopNameInput} Barbing Saloon`;
+            currentDate = new Date(`${startDateInput}T23:29:00+01:00`);
+            difficulty = difficultyInput;
+            showLoadingModal(() => {
+                showGamePage();
+                saveGame();
+            });
+        }
+
+        function getDifficultyModifiers() {
+            switch (difficulty) {
+                case "Easy":
+                    return {
+                        haircutEarnings: 15,
+                        energyCost: 2.5,
+                        costMultiplier: 0.8,
+                        positiveCommentChance: 0.4,
+                        abusiveCommentChance: 0.2,
+                        customerChance: 0.9
+                    };
+                case "Hard":
+                    return {
+                        haircutEarnings: 5,
+                        energyCost: 7.5,
+                        costMultiplier: 1.2,
+                        positiveCommentChance: 0.2,
+                        abusiveCommentChance: 0.5,
+                        customerChance: 0.6
+                    };
+                case "Normal":
+                default:
+                    return {
+                        haircutEarnings: 10,
+                        energyCost: 5,
+                        costMultiplier: 1,
+                        positiveCommentChance: 0.3,
+                        abusiveCommentChance: 0.3,
+                        customerChance: 0.8
+                    };
+            }
+        }
+
+        function cutHair() {
+            const modifiers = getDifficultyModifiers();
+            if (energy < modifiers.energyCost) {
+                showMessage('Not enough energy to cut hair!');
+                return;
+            }
+            if (currentComment !== null || currentEvent !== null) {
+                showMessage('Please respond to the current pop-up before continuing!');
+                return;
+            }
+            let customerChance = modifiers.customerChance + (reputation / 100) * 0.2;
+            customerChance = Math.min(1, customerChance);
+            if (Math.random() > customerChance) {
+                showNoCustomerModal();
+                return;
+            }
+            const haircutTime = Math.floor(Math.random() * 31) + 10;
+            const newTime = new Date(currentDate.getTime() + haircutTime * 60 * 1000);
+            if (newTime.getHours() >= 22) {
+                showMessage("It's 10:00 PM or later! Time to rest or go home. Click 'Next Day' to continue.");
+                document.getElementById('cut-hair-btn').disabled = true;
+                clearInterval(clockInterval);
+                return;
+            }
+            currentDate = newTime;
+            money += modifiers.haircutEarnings;
+            energy -= modifiers.energyCost;
+            customersBarbered += 1;
+            reputation = Math.max(0, Math.min(100, reputation + 0.1));
+            showMessage(`You barbered a customer and earned ${currencySymbol}${modifiers.haircutEarnings.toFixed(2)}! Took ${haircutTime} minutes. Customers today: ${customersBarbered}`);
+            const randomValue = Math.random();
+            let comment;
+            if (randomValue < modifiers.positiveCommentChance) {
+                comment = commentTypes.filter(c => c.type === 'positive')[Math.floor(Math.random() * commentTypes.filter(c => c.type === 'positive').length)];
+            } else if (randomValue < modifiers.positiveCommentChance + modifiers.abusiveCommentChance) {
+                comment = commentTypes.filter(c => c.type === 'abusive')[Math.floor(Math.random() * commentTypes.filter(c => c.type === 'abusive').length)];
+            } else {
+                comment = commentTypes.filter(c => c.type === 'negative')[Math.floor(Math.random() * commentTypes.filter(c => c.type === 'negative').length)];
+            }
+            if (comment) {
+                reputation = Math.max(0, Math.min(100, reputation + comment.reputation));
+                showCommentModal(comment);
+            }
+            if (Math.random() < 0.1) triggerRandomEvent();
+            updateStatus();
+            saveGame();
+        }
+
+        function showNoCustomerModal() {
+            document.getElementById('no-customer-modal').style.display = 'flex';
+        }
+
+        function closeNoCustomerModal() {
+            document.getElementById('no-customer-modal').style.display = 'none';
+        }
+
+        function buyFood() {
+            if (money >= 5) {
+                money -= 5;
+                energy = Math.min(100, energy + 20);
+                showMessage('You bought food and gained 20 energy!');
+                updateStatus();
+                saveGame();
+            } else {
+                showMessage('Not enough money to buy food! You need ' + currencySymbol + '5, but you have ' + currencySymbol + money.toFixed(2) + '.');
+            }
+        }
+
+        function rentHouse() {
+            if (housing === "None") {
+                housing = "Rented";
+                rentActive = true;
+                daysSinceLastRentPayment = 0;
+                showMessage('You rented a house for ' + currencySymbol + '50/month! Payment due at month\'s end.');
+                updateStatus();
+                saveGame();
+            } else {
+                showMessage('You already have housing!');
+            }
+        }
+
+        function buyHouse() {
+            if (housing !== "None") {
+                showMessage('You already have housing!', 'shop');
+                return;
+            }
+            const modifiers = getDifficultyModifiers();
+            const select = document.getElementById('house-select');
+            const value = select.value;
+            if (!value) {
+                showMessage('Please select a house type!', 'shop');
+                return;
+            }
+            const [houseType, cost] = value.split('|');
+            const houseCost = parseFloat(cost) * modifiers.costMultiplier;
+            if (isNaN(houseCost)) {
+                showMessage('Invalid house cost!', 'shop');
+                return;
+            }
+            if (money >= houseCost) {
+                money -= houseCost;
+                housing = houseType;
+                rentActive = false;
+                daysSinceLastRentPayment = 0;
+                select.value = '';
+                showMessage(`You bought a ${houseType} for ${currencySymbol}${houseCost.toFixed(2)}!`, 'shop');
+                updateStatus();
+                saveGame();
+            } else {
+                showMessage(`Not enough money to buy a ${houseType}! You need ${currencySymbol}${houseCost.toFixed(2)}, but you have ${currencySymbol}${money.toFixed(2)}.`, 'shop');
+            }
+        }
+
+        function buyCar() {
+            if (car !== "None") {
+                showMessage('You already own a car!', 'shop');
+                return;
+            }
+            const modifiers = getDifficultyModifiers();
+            const select = document.getElementById('car-select');
+            const value = select.value;
+            if (!value) {
+                showMessage('Please select a car!', 'shop');
+                return;
+            }
+            const [carName, cost] = value.split('|');
+            const carCost = parseFloat(cost) * modifiers.costMultiplier;
+            if (isNaN(carCost)) {
+                showMessage('Invalid car cost!', 'shop');
+                return;
+            }
+            if (money >= carCost) {
+                money -= carCost;
+                car = carName;
+                select.value = '';
+                showMessage(`You bought a ${carName} for ${currencySymbol}${carCost.toFixed(2)}!`, 'shop');
+                updateStatus();
+                saveGame();
+            } else {
+                showMessage(`Not enough money to buy a ${carName}! You need ${currencySymbol}${carCost.toFixed(2)}, but you have ${currencySymbol}${money.toFixed(2)}.`, 'shop');
+            }
+        }
+
+        function getGirlfriend() {
+            if (girlfriend !== "None") {
+                showMessage('You already have a girlfriend!', 'shop');
+                return;
+            }
+            const modifiers = getDifficultyModifiers();
+            const select = document.getElementById('girlfriend-select');
+            const value = select.value;
+            if (!value) {
+                showMessage('Please select a girlfriend!', 'shop');
+                return;
+            }
+            const [gfName, cost] = value.split('|');
+            const gfCost = parseFloat(cost) * modifiers.costMultiplier;
+            if (isNaN(gfCost)) {
+                showMessage('Invalid girlfriend cost!', 'shop');
+                return;
+            }
+            if (money >= gfCost) {
+                money -= gfCost;
+                girlfriend = gfName;
+                girlfriendCost = gfCost;
+                daysSinceLastPayment = 0;
+                select.value = '';
+                showMessage(`You are now dating ${gfName}! (Costs ${currencySymbol}${gfCost.toFixed(2)}/month)`, 'shop');
+                updateStatus();
+                saveGame();
+            } else {
+                showMessage(`Not enough money to date ${gfName}! You need ${currencySymbol}${gfCost.toFixed(2)}, but you have ${currencySymbol}${money.toFixed(2)}.`, 'shop');
+            }
+        }
+
+        function buyTool() {
+            const modifiers = getDifficultyModifiers();
+            const select = document.getElementById('tool-select');
+            const value = select.value;
+            if (!value) {
+                showMessage('Please select a tool!', 'shop');
+                return;
+            }
+            const [toolName, cost] = value.split('|');
+            const toolCost = parseFloat(cost) * modifiers.costMultiplier;
+            if (isNaN(toolCost)) {
+                showMessage('Invalid tool cost!', 'shop');
+                return;
+            }
+            if (tools.includes(toolName)) {
+                showMessage(`You already own ${toolName}!`, 'shop');
+                return;
+            }
+            if (money >= toolCost) {
+                money -= toolCost;
+                tools.push(toolName);
+                const repGain = toolName === 'Razor' ? 0.25 : toolName === 'Hair Dryer' ? 0.75 : 0.5;
+                reputation = Math.max(0, Math.min(100, reputation + repGain));
+                select.value = '';
+                showMessage(`You bought ${toolName} for ${currencySymbol}${toolCost.toFixed(2)}! (+${repGain} Reputation)`, 'shop');
+                updateStatus();
+                saveGame();
+            } else {
+                showMessage(`Not enough money to buy ${toolName}! You need ${currencySymbol}${toolCost.toFixed(2)}, but you have ${currencySymbol}${money.toFixed(2)}.`, 'shop');
+            }
+        }
+
+        function upgradeShop() {
+            const modifiers = getDifficultyModifiers();
+            const select = document.getElementById('shop-upgrade-select');
+            const value = select.value;
+            if (!value) {
+                showMessage('Please select a shop upgrade!', 'shop');
+                return;
+            }
+            const [newShopType, cost] = value.split('|');
+            const shopCost = parseFloat(cost) * modifiers.costMultiplier;
+            if (isNaN(shopCost)) {
+                showMessage('Invalid shop upgrade cost!', 'shop');
+                return;
+            }
+            if (shopType === newShopType) {
+                showMessage(`You already own a ${newShopType}!`, 'shop');
+                return;
+            }
+            if (money >= shopCost) {
+                money -= shopCost;
+                shopType = newShopType;
+                let repGain;
+                switch (newShopType) {
+                    case 'Basic Shop':
+                        repGain = 1;
+                        break;
+                    case 'Modern Shop':
+                        repGain = 2;
+                        break;
+                    case 'Luxury Shop':
+                        repGain = 3;
+                        break;
+                    case 'Premium Shop':
+                        repGain = 4;
+                        break;
+                    case 'Elite Shop':
+                        repGain = 5;
+                        break;
+                    case 'Ultimate Shop':
+                        repGain = 6;
+                        break;
+                }
+                reputation = Math.max(0, Math.min(100, reputation + repGain));
+                select.value = '';
+                showMessage(`You upgraded to a ${newShopType} for ${currencySymbol}${shopCost.toFixed(2)}! (+${repGain} Reputation)`, 'shop');
+                updateStatus();
+                saveGame();
+            } else {
+                showMessage(`Not enough money to upgrade to ${newShopType}! You need ${currencySymbol}${shopCost.toFixed(2)}, but you have ${currencySymbol}${money.toFixed(2)}.`, 'shop');
+            }
+        }
+
+        function freeDay() {
+            const currentMonth = currentDate.getMonth();
+            day++;
+            daysSinceLastPayment++;
+            daysSinceLastRentPayment++;
+            currentDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() + 1, 8, 0);
+            const newMonth = currentDate.getMonth();
+            energy = Math.min(100, energy + 20);
+            reputation = Math.max(0, reputation - 2);
+            customersBarbered = 0;
+            if (rentActive && currentMonth !== newMonth) {
+                if (money >= 50) {
+                    money -= 50;
+                    daysSinceLastRentPayment = 0;
+                    showMessage('Paid ' + currencySymbol + '50 for monthly rent.');
+                } else {
+                    housing = "None";
+                    rentActive = false;
+                    daysSinceLastRentPayment = 0;
+                    showMessage('Evicted! Not enough money for rent.');
+                }
+            }
+            if (girlfriend !== "None" && daysSinceLastPayment >= 30) {
+                if (money >= girlfriendCost) {
+                    money -= girlfriendCost;
+                    daysSinceLastPayment = 0;
+                    showMessage(`Paid ${currencySymbol}${girlfriendCost} for your girlfriend, ${girlfriend}.`);
+                } else {
+                    girlfriend = "None";
+                    girlfriendCost = 0;
+                    daysSinceLastPayment = 0;
+                    showMessage(`You broke up with ${girlfriend}! Not enough money.`);
+                }
+            }
+            showMessage('You took a free day and rested. Energy +20, Reputation -2.');
+            if (Math.random() < 0.3) triggerRandomEvent();
+            startClock();
+            updateStatus();
+            saveGame();
+        }
+
+        function startFreeDay() {
+            showLoadingModal(() => {
+                freeDay();
+            });
+        }
+
+        function calculateNetWorth() {
+            let netWorth = money;
+            if (housing === 'Apartment') netWorth += 1000;
+            else if (housing === 'Bungalow') netWorth += 2000;
+            else if (housing === 'Mansion') netWorth += 5000;
+            else if (housing === 'Condo') netWorth += 2000;
+            else if (housing === 'Villa') netWorth += 3000;
+            else if (housing === 'Penthouse') netWorth += 7000;
+            if (car === 'Toyota Corolla') netWorth += 500;
+            else if (car === 'Honda Civic') netWorth += 700;
+            else if (car === 'BMW X5') netWorth += 1500;
+            if (shopType === 'Basic Shop') netWorth += 500;
+            else if (shopType === 'Modern Shop') netWorth += 1000;
+            else if (shopType === 'Luxury Shop') netWorth += 2000;
+            else if (shopType === 'Premium Shop') netWorth += 3000;
+            else if (shopType === 'Elite Shop') netWorth += 5000;
+            else if (shopType === 'Ultimate Shop') netWorth += 10000;
+            netWorth += tools.reduce((sum, tool) => sum + (tool === 'Clippers' ? 100 : tool === 'Scissors' ? 50 : tool === 'Sterilizer' ? 150 : tool === 'Trimmer' ? 75 : tool === 'Razor' ? 30 : 120), 0);
+            return netWorth;
+        }
+
+        function updateLeaderboard() {
+            const player = { name: shopName || 'You', reputation: reputation, netWorth: calculateNetWorth() };
+            const allBarbers = [...barbers, player].sort((a, b) => b.netWorth - a.netWorth);
+            const leaderboardBody = document.getElementById('leaderboard-body');
+            leaderboardBody.innerHTML = '';
+            allBarbers.forEach((barber, index) => {
+                const row = document.createElement('tr');
+                row.className = barber.name === (shopName || 'You') ? 'player' : '';
+                row.innerHTML = `
+                    <td>${index + 1}</td>
+                    <td>${barber.name}</td>
+                    <td>${barber.reputation.toFixed(1)}</td>
+                    <td>${currencySymbol}${barber.netWorth.toFixed(2)}</td>
+                `;
+                leaderboardBody.appendChild(row);
+                if (barber.name === (shopName || 'You')) {
+                    document.getElementById('player-rank').textContent = index + 1;
+                }
+            });
+        }
+
+        function nextDay() {
+            const currentMonth = currentDate.getMonth();
+            day++;
+            daysSinceLastPayment++;
+            daysSinceLastRentPayment++;
+            currentDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() + 1, 8, 0);
+            const newMonth = currentDate.getMonth();
+            energy = Math.min(100, energy + 10);
+            customersBarbered = 0;
+            dailyCustomerFactor = Math.random() * 0.6 + 0.4;
+            if (rentActive && currentMonth !== newMonth) {
+                if (money >= 50) {
+                    money -= 50;
+                    daysSinceLastRentPayment = 0;
+                    showMessage('Paid ' + currencySymbol + '50 for monthly rent.');
+                } else {
+                    housing = "None";
+                    rentActive = false;
+                    daysSinceLastRentPayment = 0;
+                    showMessage('Evicted! Not enough money for rent.');
+                }
+            }
+            if (girlfriend !== "None" && daysSinceLastPayment >= 30) {
+                if (money >= girlfriendCost) {
+                    money -= girlfriendCost;
+                    daysSinceLastPayment = 0;
+                    showMessage(`Paid ${currencySymbol}${girlfriendCost} for your girlfriend, ${girlfriend}.`);
+                } else {
+                    girlfriend = "None";
+                    girlfriendCost = 0;
+                    daysSinceLastPayment = 0;
+                    showMessage(`You broke up with ${girlfriend}! Not enough money.`);
+                }
+            }
+            if (Math.random() < 0.3) triggerRandomEvent();
+            startClock();
+            updateStatus();
+            saveGame();
+        }
+
+        function startNextDay() {
+            showLoadingModal(() => {
+                nextDay();
+            });
+        }
+
+        function triggerRandomEvent() {
+            if (!currentEvent) {
+                const event = randomEvents[Math.floor(Math.random() * randomEvents.length)];
+                currentEvent = event;
+                document.getElementById('event-text').textContent = event.text;
+                document.getElementById('event-response-1').textContent = event.responses[0].reply;
+                document.getElementById('event-response-2').textContent = event.responses[1].reply;
+                document.getElementById('event-modal').style.display = 'flex';
+                document.getElementById('cut-hair-btn').disabled = true;
+            }
+        }
+
+        function handleEventResponse(index) {
+            if (currentEvent) {
+                currentEvent.responses[index].effect();
+                document.getElementById('event-modal').style.display = 'none';
+                currentEvent = null;
+                updateStatus();
+                saveGame();
+            }
+        }
+
+        loadGame();
+    </script>
 </body>
 </html>
